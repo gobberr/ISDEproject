@@ -2,8 +2,10 @@ extends layout
 
 block content
   h1= title  
+  h1= info
+
   if (events)
     each event in events
       p #{JSON.stringify(event)}
   else    
-    p Nessun evento nel calendario selezionato
+    p Nessun evento nel calendario "#{idCalendar}"

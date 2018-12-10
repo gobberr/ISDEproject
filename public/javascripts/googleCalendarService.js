@@ -2,7 +2,6 @@ const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
 let path = require('path');
-
 let eventToday = [];
 
 // If modifying these scopes, delete token.json.
@@ -13,15 +12,13 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const TOKEN_PATH = path.join(__dirname, '/calendarService/token.json');
 
 async function init(idCalendar) {
+  
   // Load client secrets from a local file.
-  //fs.readFile('calendarService/credentials.json', (err, content) => {
   fs.readFile(path.join(__dirname, '/calendarService/credentials.json'), (err, content) => {
     if (err) return console.error('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Calendar API.
-    authorize(JSON.parse(content), listEvents, idCalendar);
-  });
-  
-  //return [{test: '1'}, {ciao: '2'}];
+    authorize(JSON.parse(content), setEventsToday, idCalendar);
+  });  
 }
 
 /**
@@ -69,7 +66,7 @@ function getAccessToken(oAuth2Client, callback) {
         if (err) console.error(err);
         console.log('Token stored to', TOKEN_PATH);
       });
-      callback(oAuth2Client);
+      callback(oAuth2Client, calendarId);
     });
   });
 }
@@ -78,10 +75,8 @@ function getAccessToken(oAuth2Client, callback) {
  * Lists the events on the user's primary calendar.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function listEvents(auth, idCalendar) {
-
-  // console.log('idCalendar: ' + idCalendar);
-  let eventToday = [];
+function setEventsToday(auth, idCalendar) {
+  
   const calendar = google.calendar({version: 'v3', auth});
   calendar.events.list({
     calendarId: idCalendar,
@@ -90,7 +85,7 @@ function listEvents(auth, idCalendar) {
     orderBy: 'startTime',
   }, (err, res) => {
     if (err) {
-      return console.error('Error: ' + err);
+      return console.error('Error loading calendar: ' + idCalendar + '. Error: ' + err);
     }
     else {
       const events = res.data.items;
@@ -102,23 +97,26 @@ function listEvents(auth, idCalendar) {
         // scan all events finded in the calendar
         events.forEach(event => {
           //console.log('event in date: ' + event.start.dateTime.substring(0, 10));  
-
+          
           // if the event is today, put it in the eventToday array
-          if(current_date_format === event.start.dateTime.substring(0, 10)) {       
-            console.log('Found event: ' + event.summary)
-            eventToday.push(event)
+          if(current_date_format === event.start.dateTime.substring(0, 10)) {              
+            let tempEvent = new Object(); 
+            tempEvent.title = event.summary;
+            tempEvent.date = event.start.dateTime.substring(0, 10);
+            tempEvent.start_time = event.start.dateTime.substring(11, 16);
+            tempEvent.end_time = event.end.dateTime.substring(11, 16);
+            console.log('Found event: ' + JSON.stringify(tempEvent));
+            eventToday.push(tempEvent);
           }
-        });
-        console.log('eventToday.lenght = ' + eventToday.length);        
+        });        
       } else {
-        console.error('There aren\'t any events in this calendar');
+        console.error('There are no events in the calendar: ' + idCalendar);
       }
     }
-  });  
+  });    
 }
 
-function getCurrentDate() {
-
+function getCurrentDate() {  
   var current_date = new Date();      
   var d = new Date(current_date),
     month = '' + (d.getMonth() + 1),
@@ -131,14 +129,9 @@ function getCurrentDate() {
   return [year, month, day].join('-');
 }
 
-function getEventToday() {
+function getEventsToday() {
   return eventToday;
 }
 
-function resetEventToday() {
-  eventToday = null;
-}
-
 exports.init = init;
-exports.getEventToday = getEventToday;
-exports.resetEventToday = resetEventToday;
+exports.getEventsToday = getEventsToday;

@@ -2,11 +2,11 @@ let express = require('express');
 let router = express.Router();
 const unitn = require('./../public/javascripts/freeRoomUnitnService');
 const calendar = require('./../public/javascripts/googleCalendarService');
-const {google} = require('googleapis');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Homepage' });
+  
+  res.render('index', { title: 'Homepage'});
 });
 
 router.get('/auleUniTN', function(req, res, next) {
@@ -39,35 +39,25 @@ router.get('/auleUniTN', function(req, res, next) {
     });
 });
 
-/*router.get('/calendar', function (req, res, next) {
-  res.render('selectCalendar', { title: 'Insert the name of the calendar' })   
-});*/
+router.get('/selectCalendar', function (req, res, next) {
+  
+  let thisMessage = '';  
+  if(req.query.calendar) {
+    thisMessage = "Hai selezionato " + req.query.calendar;
+  }    
+  res.render('selectCalendar', { title: 'Insert the name of the calendar', info: thisMessage })  
+});
 
-router.get('/calendar/:calendarId', async (req, res, next) => {
+router.get('/selectCalendar/:result', function (req, res, next) {
+  // TODO: 
+});
+
+router.get('/calendar/:calendarId', function(req, res, next) {
   
-  
-  //console.log(req.params.calendarId);
-  console.log("1")
-  await calendar.init(req.params.calendarId)
-  console.log("2")
-  let listEvents = calendar.getEventToday()
+  calendar.init(req.params.calendarId)
   //.then((listEvents) => {
-    
-    console.log('3 listEvents: <' + JSON.stringify(listEvents) + '>')  
-    res.render('calendar', { title: 'List of events in your calendar', events : listEvents })   
-    console.log("4")
-    calendar.resetEventToday();
-    console.log('5 listEvents: <' + JSON.stringify(listEvents) + '>')  
-    
-
-    calendar.resetEventToday();
-    console.log('6')  
-    console.log('7 ' + calendar.getEventToday());
-    console.log('8')
-    
-    let auth = google.auth;
-    console.log('9 ' + JSON.stringify(auth));    
-
+  let listEvent = calendar.getEventsToday();
+  res.render('calendar', { title: 'List of events in your calendar', events : listEvent, idCalendar: req.params.calendarId })     
   /*}).catch((err) => {
     // In case of error, log and send the error to the client
     res.locals.message = err.message;
@@ -78,5 +68,9 @@ router.get('/calendar/:calendarId', async (req, res, next) => {
 
 });
 
+router.get('/test', function(req, res, next) {
+  let ris = calendar.getEventsToday();
+  res.render('test', { result: JSON.stringify(ris) });
+});
 
 module.exports = router;
