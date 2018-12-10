@@ -39,7 +39,7 @@ function authorize(credentials, callback, calendarId) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getAccessToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-      (oAuth2Client, calendarId);
+    callback(oAuth2Client, calendarId);
   }); 
 }
 
