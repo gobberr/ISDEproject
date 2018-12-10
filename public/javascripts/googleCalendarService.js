@@ -12,7 +12,7 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 // time.
 const TOKEN_PATH = path.join(__dirname, '/calendarService/token.json');
 
-function init(idCalendar) {
+async function init(idCalendar) {
   // Load client secrets from a local file.
   //fs.readFile('calendarService/credentials.json', (err, content) => {
   fs.readFile(path.join(__dirname, '/calendarService/credentials.json'), (err, content) => {
@@ -20,6 +20,8 @@ function init(idCalendar) {
     // Authorize a client with credentials, then call the Google Calendar API.
     authorize(JSON.parse(content), listEvents, idCalendar);
   });
+  
+  //return [{test: '1'}, {ciao: '2'}];
 }
 
 /**
@@ -37,7 +39,7 @@ function authorize(credentials, callback, calendarId) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getAccessToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client, calendarId);
+      (oAuth2Client, calendarId);
   }); 
 }
 
@@ -77,7 +79,9 @@ function getAccessToken(oAuth2Client, callback) {
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function listEvents(auth, idCalendar) {
-  
+
+  // console.log('idCalendar: ' + idCalendar);
+  let eventToday = [];
   const calendar = google.calendar({version: 'v3', auth});
   calendar.events.list({
     calendarId: idCalendar,
@@ -86,11 +90,11 @@ function listEvents(auth, idCalendar) {
     orderBy: 'startTime',
   }, (err, res) => {
     if (err) {
-      // return console.error('Error: ' + err);
+      return console.error('Error: ' + err);
     }
     else {
       const events = res.data.items;
-        
+    
       // if there are some elements in the calendar
       if (events.length) {       
         let current_date_format = getCurrentDate()
@@ -101,37 +105,40 @@ function listEvents(auth, idCalendar) {
 
           // if the event is today, put it in the eventToday array
           if(current_date_format === event.start.dateTime.substring(0, 10)) {       
-            // console.log('match for event ' + event.summary)
+            console.log('Found event: ' + event.summary)
             eventToday.push(event)
           }
         });
-        // console.log('eventToday = ' + JSON.stringify(eventToday[0].summary));
-        return eventToday;        
+        console.log('eventToday.lenght = ' + eventToday.length);        
       } else {
         console.error('There aren\'t any events in this calendar');
-      }    
-    } 
-  }); 
-    
-}
-
-function getEventToday() {
-    return eventToday;
+      }
+    }
+  });  
 }
 
 function getCurrentDate() {
 
-    var current_date = new Date();      
-    var d = new Date(current_date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+  var current_date = new Date();      
+  var d = new Date(current_date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
 
-    return [year, month, day].join('-');
+  return [year, month, day].join('-');
+}
+
+function getEventToday() {
+  return eventToday;
+}
+
+function resetEventToday() {
+  eventToday = null;
 }
 
 exports.init = init;
-exports.getEventToday = getEventToday; 
+exports.getEventToday = getEventToday;
+exports.resetEventToday = resetEventToday;
