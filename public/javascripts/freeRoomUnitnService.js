@@ -10,8 +10,8 @@ var current_time = parseInt('' + current_date.getHours() + ("0" + current_date.g
 let easyroom = "https://easyroom.unitn.it/Orario/rooms_call.php";   // API of unitn to get the timetables
 let params = {                      // Params object that contains the data used by the API
   'form-type': 'rooms',
-  //sede: 'E0503',                    // POVO
-  sede: '',
+  sede: 'E0503',                    // POVO
+  //sede: '',
   date: '',                         // Filled later with current date
   _lang: 'it'
 };
@@ -25,11 +25,11 @@ function setDate() {
   
   // Insert the formatted date into the params object
   params['date'] = stringDate;  
+  console.log("Date: " + stringDate);
 }
 
 // Perform the http POST request (url, parameters)
-function HTTPrequestJSON() { 
-
+function HTTPrequestJSON() {   
   setDate();
   //TODO: setTimeRange(); // passare il tempo recuperato dall'api del calendar
   return axios.post(easyroom, qs.stringify(params)); 
@@ -48,35 +48,35 @@ function HTTPrequestJSON() {
 // Finally, each lecture is again an array, containing the starting and ending time (lectureM is [from, to])
 // For the lecture just keep the from and to values contained in the received object for an event
 function createRoomsObject(data) {
-  // Define the object to be returned
-  var rooms = {};
-  // Check if the received object contains any lecture
-  if (data.contains_events) {
-      // Filter the data by selecting only the timetables for the classrooms
-      var events = data.events;
-      // For every object e in the event array
-      events.forEach(e => {
-          // Read the code of the classroom. This will be used to uniquely identify the room
-          var roomCode = e.CodiceAula;
-          // Create the lecture array with the from, to components
-          var lessonHours = [e.from, e.to];
+    // Define the object to be returned
+    let rooms = {};
+    // Check if the received object contains any lecture
+    if (data.contains_events) {
+        // Filter the data by selecting only the timetables for the classrooms
+        var events = data.events;
+        // For every object e in the event array
+        events.forEach(e => {
+            // Read the code of the classroom. This will be used to uniquely identify the room
+            let roomCode = e.CodiceAula;
+            // Create the lecture array with the from, to components
+            let lessonHours = [e.from, e.to];
 
-          // Add the lecture to the corresponding class in the rooms array
-          // If the room doesn't exist in the object, create a new array with the roomCode as key
-          if (!(roomCode in rooms)) {
-              //console.log("Creating array for " + roomCode);
-              rooms[roomCode] = new Array();
-          }
-          // Add the lecture to the array associated to the corresponding room
-          rooms[roomCode].push(lessonHours);
-      });
-  }
-  else {
-      // If no events are in the arrat, log it and exit
-      console.log("No events!");
-  }
-  // Return the rooms object
-  return rooms;
+            // Add the lecture to the corresponding class in the rooms array
+            // If the room doesn't exist in the object, create a new array with the roomCode as key
+            if (!(roomCode in rooms)) {
+                //console.log("Creating array for " + roomCode);
+                rooms[roomCode] = new Array();
+            }
+            // Add the lecture to the array associated to the corresponding room
+            rooms[roomCode].push(lessonHours);
+        });
+    }
+    else {
+        // If no events are in the arrat, log it and exit
+        console.log("No events!");
+    }
+    // Return the rooms object
+    return rooms;
 }
 
 // The from, to values received from the server are strings formatted as hh:mm:ss
@@ -91,6 +91,7 @@ function parseTime(time) {
 // its status (free or occupied) and the next scheduled lecture. It also creates an array for which each
 // component has four attributes {code, occupied, occupied_until, next_lesson} 
 function getFreeRooms(rooms) {
+  
   // Define the array to be returned
   var freeRooms = [];
   // For each room determine its status and the next lecture

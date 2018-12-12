@@ -15,14 +15,13 @@ router.get('/auleUniTN', function(req, res, next) {
   unitn.HTTPrequestJSON()
     .then((obj) => {
               
-      //console.log("\tLogDev: contain_event = " + JSON.stringify(obj.data));
-      var rooms = unitn.createRoomsObject(obj.data);      
+      // console.log("\tLogDev: contain_event = " + JSON.stringify(obj.data));
+      let rooms = unitn.createRoomsObject(obj.data);      
       // console.log("\tLogDev: rooms = " + JSON.stringify(rooms));
       // Once the room array created, compute the currently free rooms and the next lecture's schedule
-      var freeRooms = unitn.getFreeRooms(rooms);
-      //console.log("\tLogDev: freeRooms = " + JSON.stringify(freeRooms));
-      // Once we have all the required data, we can print it in the html      
-      // var data = JSON.stringify(freeRooms);
+      let freeRooms = unitn.getFreeRooms(rooms);
+      // console.log("\tLogDev: freeRooms = " + JSON.stringify(freeRooms));
+      // Once we have all the required data, we can print it in the html            
       // Render the data to the pug
       if(!freeRooms.length) {
         freeRooms = ['Nessun aula libera trovata'];
@@ -46,10 +45,6 @@ router.get('/selectCalendar', function (req, res, next) {
     thisMessage = "Hai selezionato " + req.query.calendar;
   }    
   res.render('selectCalendar', { title: 'Insert the name of the calendar', info: thisMessage })  
-});
-
-router.get('/selectCalendar/:result', function (req, res, next) {
-  // TODO: 
 });
 
 router.get('/calendar/:calendarId', function(req, res, next) {
