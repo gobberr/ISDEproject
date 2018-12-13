@@ -2,9 +2,23 @@
 
 Scenario: 
 
-1)  Da google calendar si specifica su quale calendario 
-	-  Viene restituita la lista dei buchi di orari nella giornata 
-2)  Vengono selezionate le aule libere
-	-  Restituisce le aule libere dove puoi stare per perdere tempo
-3)  Ogni aula ha il link di google maps per vedere dove si trova (il dipartimento)
-4)  Richiesta a ttesercizio per vedere quali autobus ci sono che coprono la tratta da te a quell'aula selezionata    
+1)  Si specifica un google calendar su cui fare riferimento  
+	
+2)  Vengono selezionate le aule libere unitn nelle quali puoi stare per perdere tempo
+
+3)  Ogni aula ha il link di google maps per vedere dove si trova il dipartimento nella mappa
+
+4)  Richiesta a facebook events per vedere quali eventi ci sono nel tuo tempo libero nella tua zona (integrazione maps e facebook 
+	events)
+
+
+Setup:
+
+1)	Installare le dipendenze
+	npm install
+
+2) 	Avviare il servizio
+	npm start
+
+3)	Accedere al servizio
+	localhost:3000
