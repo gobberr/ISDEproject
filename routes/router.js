@@ -44,7 +44,7 @@ router.get('/calendar', function (req, res, next) {
     // console.log(JSON.stringify(req.query))
     calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2));
     // calendar.init('primary');
-    res.render('calendar', { title: 'Calendar API', info: 'Hai selezionato ' + req.query.id, backend: true })  
+    res.render('calendar', { title: 'Calendar API', info: 'Hai selezionato ' + req.query.id, submit: true })  
 
   } else {
     res.render('calendar', { title: 'Calendar API', info: '', submit: false })  
@@ -52,9 +52,24 @@ router.get('/calendar', function (req, res, next) {
   
 });
 
-router.get('/testCalendar', function(req, res, next) {
+router.get('/calendarApi', function(req, res, next) {
   let ris = calendar.getEventsToday();
-  res.render('testCalendar', { result: JSON.stringify(ris) });
+  res.render('calendarApi', { events: ris });
+});
+
+router.get('/maps', function(req, res, next) {
+  
+  res.render('maps', { title: 'Nothing to see here...' });
+});
+
+router.get('/facebookEvents', function(req, res, next) {
+  
+  res.render('facebookEvents', { title: 'Nothing to see here...' });
+});
+
+router.get('/test', function(req, res, next) {
+  
+  res.render('test', { title: 'Testing' });
 });
 
 module.exports = router;
