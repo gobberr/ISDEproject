@@ -6,7 +6,7 @@ const calendar = require('./../public/javascripts/googleCalendarService');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
-  res.render('index', { title: 'Homepage'});
+  res.render('index', { title: ''});
 });
 
 router.get('/auleUniTN', function(req, res, next) {
@@ -26,7 +26,7 @@ router.get('/auleUniTN', function(req, res, next) {
       if(!freeRooms.length) {
         freeRooms = ['Nessun aula libera trovata'];
       }
-      res.render('auleUniTN', { title: 'List of room in UniTN', aule: freeRooms });
+      res.render('auleUniTN', { title: 'List of room in UniTN', aule: freeRooms  });
     
     })
     .catch((err) => {
@@ -38,34 +38,23 @@ router.get('/auleUniTN', function(req, res, next) {
     });
 });
 
-router.get('/selectCalendar', function (req, res, next) {
+router.get('/calendar', function (req, res, next) {
+    
+  if(JSON.stringify(req.query.id)) {    
+    // console.log(JSON.stringify(req.query))
+    calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2));
+    // calendar.init('primary');
+    res.render('calendar', { title: 'Calendar API', info: 'Hai selezionato ' + req.query.id, backend: true })  
+
+  } else {
+    res.render('calendar', { title: 'Calendar API', info: '', submit: false })  
+  }   
   
-  let thisMessage = '';  
-  if(req.query.calendar) {
-    thisMessage = "Hai selezionato " + req.query.calendar;
-  }    
-  res.render('selectCalendar', { title: 'Insert the name of the calendar', info: thisMessage })  
 });
 
-router.get('/calendar/:calendarId', function(req, res, next) {
-  
-  calendar.init(req.params.calendarId)
-  //.then((listEvents) => {
-  let listEvent = calendar.getEventsToday();
-  res.render('calendar', { title: 'List of events in your calendar', events : listEvent, idCalendar: req.params.calendarId })     
-  /*}).catch((err) => {
-    // In case of error, log and send the error to the client
-    res.locals.message = err.message;
-    res.locals.err = req.app.get('env') === 'development' ? err : {};
-    res.status(err.status || 500);      
-    res.render('error', { error : err} );
-  });*/ 
-
-});
-
-router.get('/test', function(req, res, next) {
+router.get('/testCalendar', function(req, res, next) {
   let ris = calendar.getEventsToday();
-  res.render('test', { result: JSON.stringify(ris) });
+  res.render('testCalendar', { result: JSON.stringify(ris) });
 });
 
 module.exports = router;

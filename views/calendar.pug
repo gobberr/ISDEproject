@@ -2,10 +2,29 @@ extends layout
 
 block content
   h1= title  
-  h1= info
 
-  if (events)
-    each event in events
-      p #{JSON.stringify(event)}
-  else    
-    p Nessun evento nel calendario "#{idCalendar}"
+  if submit
+  .py-5
+    .container
+      .row
+        .col-md-12      
+          form(method='get' action='/calendar')
+            .form-group
+              label(for='calendar') Insert the calendar name:    
+              .row
+              input#calendar.form-control(type='text', placeholder='' name='id')
+              .row
+              button.btn.btn-info(type='submit') Save
+
+  br
+  br
+  if submit        
+  .py-5
+    .container
+      .row
+        .col-md-12      
+          form(method='get' action='/auleUniTN')
+            .form-group                
+              label(for='auleUniTN') #{info}
+              .row
+              button.btn.btn-info(type='submit') Freerooms                  

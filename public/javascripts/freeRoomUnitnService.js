@@ -18,14 +18,14 @@ let params = {                      // Params object that contains the data used
 
 // Obtain current date and format it in the accepted format of the API
 function setDate() {
-  let date = new Date();
-  
-  // Get the number of the day, month (0-11 so we need to do +1), and the year
-  let stringDate = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
-  
-  // Insert the formatted date into the params object
-  params['date'] = stringDate;  
-  console.log("Date: " + stringDate);
+    let date = new Date();
+    
+    // Get the number of the day, month (0-11 so we need to do +1), and the year
+    let stringDate = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+    
+    // Insert the formatted date into the params object
+    params['date'] = stringDate;  
+    // console.log("Date: " + stringDate);
 }
 
 // Perform the http POST request (url, parameters)
@@ -34,13 +34,6 @@ function HTTPrequestJSON() {
   //TODO: setTimeRange(); // passare il tempo recuperato dall'api del calendar
   return axios.post(easyroom, qs.stringify(params)); 
 }
-
-
-// ---------------------------------------------------------------------------------------------------------------
-//
-//          LIBRERIA index.js
-//
-// ---------------------------------------------------------------------------------------------------------------
 
 // This function should create the room object
 // The object should contain the rooms {room1: arr, room2: arr, .., roomN: arr}
@@ -79,13 +72,7 @@ function createRoomsObject(data) {
     return rooms;
 }
 
-// The from, to values received from the server are strings formatted as hh:mm:ss
-// This function converts the string in an integer that is more convenient during comparisons
-function parseTime(time) {
-  var tmp = time.split(":");
-  // The resulting integer will be hhmm
-  return parseInt(tmp[0] + tmp[1]);
-}
+
 
 // This function takes in input the rooms object previously created and computes, for each classroom,
 // its status (free or occupied) and the next scheduled lecture. It also creates an array for which each
@@ -139,6 +126,15 @@ function getFreeRooms(rooms) {
   // Return the new computed array to fill the HTML page
   return freeRooms;
 }
+
+// The from, to values received from the server are strings formatted as hh:mm:ss
+// This function converts the string in an integer that is more convenient during comparisons
+function parseTime(time) {
+    var tmp = time.split(":");
+    // The resulting integer will be hhmm
+    return parseInt(tmp[0] + tmp[1]);
+}
+
 
 // MODULE EXPORTS
 exports.HTTPrequestJSON = HTTPrequestJSON;    // Make the function public

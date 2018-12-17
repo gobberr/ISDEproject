@@ -12,7 +12,8 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const TOKEN_PATH = path.join(__dirname, '/calendarService/token.json');
 
 async function init(idCalendar) {
-  
+  // console.log('Initializing calendar... ')
+  // console.log('Calendar id: ' + idCalendar)
   // Load client secrets from a local file.
   fs.readFile(path.join(__dirname, '/calendarService/credentials.json'), (err, content) => {
     if (err) return console.error('Error loading client secret file:', err);
@@ -105,7 +106,7 @@ function setEventsToday(auth, idCalendar) {
             tempEvent.date = event.start.dateTime.substring(0, 10);
             tempEvent.start_time = event.start.dateTime.substring(11, 16);
             tempEvent.end_time = event.end.dateTime.substring(11, 16);
-            console.log('Found event: ' + JSON.stringify(tempEvent));
+            // console.log('Found event: ' + JSON.stringify(tempEvent));
             eventToday.push(tempEvent);
           }
         });        
