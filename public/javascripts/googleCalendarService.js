@@ -1,6 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
+const common = require('./timeService')
 let path = require('path');
 let eventToday = [];
 
@@ -32,7 +33,7 @@ function authorize(credentials, callback, calendarId) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
-
+  // console.log(oAuth2Client)
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getAccessToken(oAuth2Client, callback);
@@ -104,8 +105,8 @@ function setEventsToday(auth, idCalendar) {
             let tempEvent = new Object(); 
             tempEvent.title = event.summary;
             tempEvent.date = event.start.dateTime.substring(0, 10);
-            tempEvent.start_time = event.start.dateTime.substring(11, 16);
-            tempEvent.end_time = event.end.dateTime.substring(11, 16);
+            tempEvent.start_time = common.parseTime(event.start.dateTime.substring(11, 16));
+            tempEvent.end_time = common.parseTime(event.end.dateTime.substring(11, 16));
             // console.log('Found event: ' + JSON.stringify(tempEvent));
             eventToday.push(tempEvent);
           }

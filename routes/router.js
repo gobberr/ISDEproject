@@ -2,6 +2,7 @@ let express = require('express');
 let router = express.Router();
 const unitn = require('./../public/javascripts/freeRoomUnitnService');
 const calendar = require('./../public/javascripts/googleCalendarService');
+const common = require('../public/javascripts/timeService');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,11 +19,12 @@ router.get('/auleUniTN', function(req, res, next) {
       // console.log("\tLogDev: contain_event = " + JSON.stringify(obj.data));
       let rooms = unitn.createRoomsObject(obj.data);      
       // console.log("\tLogDev: rooms = " + JSON.stringify(rooms));
-      // Once the room array created, compute the currently free rooms and the next lecture's schedule
       let freeRooms = unitn.getFreeRooms(rooms);
       // console.log("\tLogDev: freeRooms = " + JSON.stringify(freeRooms));
       // Once we have all the required data, we can print it in the html            
-      // Render the data to the pug
+      // Render the data to the pug      
+      // console.log(JSON.stringify(common.initDay()));
+
       if(!freeRooms.length) {
         freeRooms = ['Nessun aula libera trovata'];
       }
@@ -44,16 +46,17 @@ router.get('/calendar', function (req, res, next) {
     // console.log(JSON.stringify(req.query))
     calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2));
     // calendar.init('primary');
-    res.render('calendar', { title: 'Calendar API', info: 'Hai selezionato ' + req.query.id, submit: true })  
+    res.render('calendar', { title: 'Calendar API', info: 'Hai selezionato ' + req.query.id, submit: '' })  
 
   } else {
-    res.render('calendar', { title: 'Calendar API', info: '', submit: false })  
+    res.render('calendar', { title: 'Calendar API', info: '', submit: 'Prosegui' })  
   }   
   
 });
 
 router.get('/calendarApi', function(req, res, next) {
   let ris = calendar.getEventsToday();
+  console.log("ris: " + JSON.stringify(ris))
   res.render('calendarApi', { events: ris });
 });
 
@@ -69,7 +72,7 @@ router.get('/facebookEvents', function(req, res, next) {
 
 router.get('/test', function(req, res, next) {
   
-  res.render('test', { title: 'Testing' });
+  res.render('test', { title: 'Testing' , result: 'Result'});
 });
 
 module.exports = router;

@@ -1,17 +1,17 @@
 // Import the required modules
 const axios = require('axios')  // Similar to jQuery's ajax. Used to perform an http request
 const qs = require('qs')        // QueryString module. We'll use the JSON stringify method
-var current_date = new Date();
+const common = require('./timeService')
+let current_date = new Date();
 // Get the number of the day, month (0-11 so we need to do +1), and the year
-var current_time = parseInt('' + current_date.getHours() + ("0" + current_date.getMinutes()).slice(-2));
+let current_time = parseInt('' + current_date.getHours() + ("0" + current_date.getMinutes()).slice(-2));
 
 
 // Declaration of the data to be used during the request
 let easyroom = "https://easyroom.unitn.it/Orario/rooms_call.php";   // API of unitn to get the timetables
 let params = {                      // Params object that contains the data used by the API
   'form-type': 'rooms',
-  sede: 'E0503',                    // POVO
-  //sede: '',
+  sede: 'E0503',                    // POVO  
   date: '',                         // Filled later with current date
   _lang: 'it'
 };
@@ -46,7 +46,7 @@ function createRoomsObject(data) {
     // Check if the received object contains any lecture
     if (data.contains_events) {
         // Filter the data by selecting only the timetables for the classrooms
-        var events = data.events;
+        let events = data.events;
         // For every object e in the event array
         events.forEach(e => {
             // Read the code of the classroom. This will be used to uniquely identify the room
@@ -80,23 +80,23 @@ function createRoomsObject(data) {
 function getFreeRooms(rooms) {
   
   // Define the array to be returned
-  var freeRooms = [];
+  let freeRooms = [];
   // For each room determine its status and the next lecture
-  for (var code in rooms) {
+  for (let code in rooms) {
       //console.log("Evaluating room " + code);
-      // Init the variables
-      var room = rooms[code];
-      var occupied = false;
-      var occupied_until = null;
-      var next_lesson = null;
+      // Init the letiables
+      let room = rooms[code];
+      let occupied = false;
+      let occupied_until = null;
+      let next_lesson = null;
       // Here we assume that the events are given in chronological order
       // Cycle until we haven't found the next lesson or we have read all events
-      for (var i = 0; (next_lesson == null) && (i < room.length); i++) {
+      for (let i = 0; (next_lesson == null) && (i < room.length); i++) {
           // Get the current lecture of index i
-          var time = room[i];
+          let time = room[i];
           // Convert the strings hh:mm:ss to the integers hhmm
-          var from = parseTime(time[0]);
-          var to = parseTime(time[1]);
+          let from = common.parseTime(time[0]);
+          let to = common.parseTime(time[1]);
           //console.log(from, to)
           // If the current time is past the start of the lecture but prior to its ending,
           // then the room is occupied
@@ -113,7 +113,7 @@ function getFreeRooms(rooms) {
           }
       }
       // Create the object to be added to the returned array
-      var output = {
+      let output = {
           code: code,
           occupied: occupied,
           occupied_until: occupied_until,
@@ -127,13 +127,7 @@ function getFreeRooms(rooms) {
   return freeRooms;
 }
 
-// The from, to values received from the server are strings formatted as hh:mm:ss
-// This function converts the string in an integer that is more convenient during comparisons
-function parseTime(time) {
-    var tmp = time.split(":");
-    // The resulting integer will be hhmm
-    return parseInt(tmp[0] + tmp[1]);
-}
+
 
 
 // MODULE EXPORTS

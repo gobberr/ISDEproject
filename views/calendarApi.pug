@@ -3,7 +3,8 @@ extends layout
 block content
   h1= title  
 
-  if (events)    
-      p #{JSON.stringify(events)}
+  if (events)
+    each event in events    
+      p #{JSON.stringify(event)}
   else    
     p Nessun evento nel calendario selezionato
