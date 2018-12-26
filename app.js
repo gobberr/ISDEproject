@@ -37,7 +37,7 @@ app.use(passport.session());
 
 //connect to mongodb
 mongoose.connect(keys.mongoDB.dbURI, { useNewUrlParser: true }, () => {
-  console.log('Connected to mongodb');
+  // console.log('Connected to mongodb');
 })
 
 //set up routes
@@ -48,7 +48,7 @@ app.use('/profile', profileRoutes);
 /* GET home page. */
 app.get('/', function(req, res, next) {
   
-  res.render('index', { title: 'Homepage'});
+  res.render('index', { user: req.user, title: 'Homepage'});
 });
 
 // catch 404 and forward to error handler

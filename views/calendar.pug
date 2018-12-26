@@ -1,23 +1,19 @@
 extends layout
 
-block content
-  h1= title  
-
-  .py-2
+block content  
+  
+  .py-5
     .container
       .row
         .col-md-4      
           form(method='get' action='/api/calendar')
             .form-group
-              label(for='calendar') Insert the calendar name:    
+              h5 Insert the calendar name:    
               .row
               input#calendar.form-control(type='text', placeholder='' name='id')
               .row
-              button.btn.btn-info(type='submit') Save      
-      .row
-        .col-md-4   
-          form(method='get' action='/api/auleUniTN')
-            .form-group                
-              label(for='auleUniTN') #{info}
+              br
+              h5 #{info}
               .row
-              button.btn.btn-info(type='submit') Freerooms                  
+              button.btn.btn-info(type='submit') Save      
+      

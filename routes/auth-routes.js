@@ -6,11 +6,6 @@ const path = require('path');
 //static files such as css or html
 router.use(express.static(path.join(__dirname, '../public')));
 
-//auth login
-router.get('/login', (req, res) => {
-    res.render('login', { user: req.user });
-});
-
 //auth logout
 router.get('/logout', (req, res) => {
     //handle with passport
@@ -20,13 +15,13 @@ router.get('/logout', (req, res) => {
 
 //auth google
 router.get('/google', passport.authenticate('google', {
-    scope:['profile', 'email']
+    scope:['profile', 'email', 'https://www.googleapis.com/auth/calendar']
 }));
 
 //callback route for google to redirect to
 router.get('/google/redirect', passport.authenticate('google'), (req,res) => {
     //res.send(req.user);
-    res.redirect('/profile/');
+    res.redirect('/profile');
 });
 
 module.exports = router;
