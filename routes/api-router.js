@@ -1,14 +1,8 @@
-let express = require('express');
-let router = express.Router();
-const unitn = require('./../public/javascripts/freeRoomUnitnService');
-const calendar = require('./../public/javascripts/googleCalendarService');
+const express = require('express');
+const router = express.Router();
+const unitn = require('../public/javascripts/freeRoomUnitnService');
+const calendar = require('../public/javascripts/googleCalendarService');
 const common = require('../public/javascripts/timeService');
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  
-  res.render('index', { title: ''});
-});
 
 router.get('/auleUniTN', function(req, res, next) {
   
@@ -28,7 +22,7 @@ router.get('/auleUniTN', function(req, res, next) {
       if(!freeRooms.length) {
         freeRooms = ['Nessun aula libera trovata'];
       }
-      res.render('auleUniTN', { title: 'List of room in UniTN', aule: freeRooms  });
+      res.render('auleUniTN', { user: req.user, title: 'List of room in UniTN', aule: freeRooms  });
     
     })
     .catch((err) => {
@@ -46,10 +40,10 @@ router.get('/calendar', function (req, res, next) {
     // console.log(JSON.stringify(req.query))
     calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2));
     // calendar.init('primary');
-    res.render('calendar', { title: 'Calendar API', info: 'Hai selezionato ' + req.query.id, submit: '' })  
+    res.render('calendar', { user: req.user, title: 'Calendar API', info: 'Hai selezionato ' + req.query.id, submit: '' })  
 
   } else {
-    res.render('calendar', { title: 'Calendar API', info: '', submit: 'Prosegui' })  
+    res.render('calendar', { user: req.user, title: 'Calendar API', info: '', submit: 'Prosegui' })  
   }   
   
 });
@@ -57,22 +51,22 @@ router.get('/calendar', function (req, res, next) {
 router.get('/calendarApi', function(req, res, next) {
   let ris = calendar.getEventsToday();
   console.log("ris: " + JSON.stringify(ris))
-  res.render('calendarApi', { events: ris });
+  res.render('calendarApi', { user: req.user, events: ris });
 });
 
 router.get('/maps', function(req, res, next) {
   
-  res.render('maps', { title: 'Nothing to see here...' });
+  res.render('maps', { user: req.user, title: 'Nothing to see here...' });
 });
 
 router.get('/facebookEvents', function(req, res, next) {
   
-  res.render('facebookEvents', { title: 'Nothing to see here...' });
+  res.render('facebookEvents', { user: req.user, title: 'Nothing to see here...' });
 });
 
 router.get('/test', function(req, res, next) {
   
-  res.render('test', { title: 'Testing' , result: 'Result'});
+  res.render('test', { user: req.user, title: 'Testing' , result: 'Result'});
 });
 
 module.exports = router;

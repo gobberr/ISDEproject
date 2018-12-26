@@ -1,20 +1,42 @@
 doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    p 
-      a(href='/calendar') Run DEMO
-    br
-    p 
-      a(href='/calendarApi') Calendar Api  
-    p 
-      a(href='/auleUniTN') Aule UniTN Api
-    p 
-      a(href='/maps') Maps Api
-    p 
-      a(href='/facebookEvents') Facebook Events Api    
-    
+head
+  meta(charset='utf-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', type='text/css')
+  link(rel='stylesheet', href='https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-beta.1.css', type='text/css')
+  title
+  link(rel='stylesheet', href='/stylesheets/style.css')
+  
+  .py-5
+    .container
+      .row
+        .col-md-8
+          ul.nav.nav-tabs
+            li.nav-item
+              a.active.nav-link(href='/')
+                i.fa.fa-home.fa-home
+                | &nbsp;Homepage
+            li.nav-item
+              a.nav-link(href='/api/calendar') Run DEMO
+            li.nav-item
+              a.nav-link(href='/api/calendarApi') Calendar Api
+            li.nav-item
+              a.nav-link(href='/api/auleUniTN') auleUniTN            
+            li.nav-item
+              a.nav-link(href='/api/maps') Maps
+            li.nav-item
+              a.nav-link(href='/api/facebookEvents') Facebook events
+        .col-md-4
+          if(user)
+            a.btn.btn-outline-primary(href='/profile/') Profile
+
+          if(user)
+            a.btn.btn-outline-primary(href='/auth/logout') Logout               
+          else  
+            a.btn.btn-outline-primary(href='/auth/google') Sign in
+        
 
   body
     block content
+
+

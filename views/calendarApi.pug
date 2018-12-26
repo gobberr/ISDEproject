@@ -1,10 +1,16 @@
 extends layout
 
 block content
-  h1= title  
 
-  if (events)
-    each event in events    
-      p #{JSON.stringify(event)}
-  else    
-    p Nessun evento nel calendario selezionato
+  h1= title
+  .py-5
+    .container
+      .row
+        .col-md-12
+        h1= title  
+
+        if(events)
+          each event in events    
+            p #{JSON.stringify(event)}
+        if(events.lenght===0)    
+          p Nessun evento nel calendario selezionato

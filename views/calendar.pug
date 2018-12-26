@@ -3,27 +3,20 @@ extends layout
 block content
   h1= title  
 
-  if submit
-  .py-5
+  .py-2
     .container
       .row
-        .col-md-12      
-          form(method='get' action='/calendar')
+        .col-md-4      
+          form(method='get' action='/api/calendar')
             .form-group
               label(for='calendar') Insert the calendar name:    
               .row
               input#calendar.form-control(type='text', placeholder='' name='id')
               .row
-              button.btn.btn-info(type='submit') Save
-
-  br
-  br
-  if submit        
-  .py-5
-    .container
+              button.btn.btn-info(type='submit') Save      
       .row
-        .col-md-12      
-          form(method='get' action='/auleUniTN')
+        .col-md-4   
+          form(method='get' action='/api/auleUniTN')
             .form-group                
               label(for='auleUniTN') #{info}
               .row

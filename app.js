@@ -1,13 +1,20 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
+const logger = require('morgan');
 
-var router = require('./routes/router');
-// var usersRouter = require('./routes/users');
+const authRoutes = require('./routes/auth-routes');
+const profileRoutes = require('./routes/profile-routes');
+const apiRouter = require('./routes/api-router');
 
-var app = express();
+const mongoose = require('mongoose');
+const passport = require('passport');
+const keys = require('./config/keys');
+const passportSetup = require('./config/passport-setup');
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,7 +26,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', router);
+app.use(cookieSession({
+  maxAge: 24*60*60*1000, // in milliseconds
+  keys:[keys.session.cookieKey] // key to encrypt data in the cookie
+}));
+
+//initialaze passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+//connect to mongodb
+mongoose.connect(keys.mongoDB.dbURI, { useNewUrlParser: true }, () => {
+  console.log('Connected to mongodb');
+})
+
+//set up routes
+app.use('/api', apiRouter);
+app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes);
+
+/* GET home page. */
+app.get('/', function(req, res, next) {
+  
+  res.render('index', { title: 'Homepage'});
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
