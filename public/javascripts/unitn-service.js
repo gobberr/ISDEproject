@@ -16,7 +16,7 @@ let params = {                      // Params object that contains the data used
 /** 
  * http POST request (url, parameters)
  * */ 
-function HTTPrequestJSON() {   
+function easyroomRequest() {   
   
   // set current date
   let date = new Date();
@@ -116,6 +116,6 @@ function getFreeRooms(rooms) {
 }
 
 // MODULE EXPORTS
-exports.HTTPrequestJSON = HTTPrequestJSON;    // Make the function public
+exports.easyroomRequest = easyroomRequest;    // Make the function public
 exports.createRoomsObject = createRoomsObject;
 exports.getFreeRooms = getFreeRooms;

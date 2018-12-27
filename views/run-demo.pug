@@ -1,0 +1,23 @@
+extends header
+
+block content
+
+  .py-5
+    .container
+      #user
+        if user
+          .row
+          h5 Result
+          .row
+          br  
+          #planning
+          if (planning.length>0)
+            each event in planning    
+              h7 #{event}
+              br
+          else
+            h7 Error
+        else
+          .row
+            .col-md-4
+              h4 Login to use the service
