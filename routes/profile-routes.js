@@ -6,15 +6,15 @@ const path = require('path');
 router.use(express.static(path.join(__dirname, '../public')));
 
 const authCheck = (req, res, next) => {
-    if(!req.user) {
-        res.redirect('/auth/login');
-    } else {
-        next();
-    }
+  if(!req.user) {
+    res.redirect('/auth/login');
+  } else {
+    next();
+  }
 }
 
 router.get('/', authCheck, (req,res) => {
-    res.render('profile', { user: req.user, title: 'Profile' });    
+  res.render('profile', { user: req.user, title: 'Profile' });    
 })
 
 module.exports = router;

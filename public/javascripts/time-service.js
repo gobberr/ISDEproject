@@ -49,6 +49,30 @@ function temporize(/* .... */) {
   // TODO: algoritmo di temporizzazione
 }
 
+function getCurrentDate() {  
+  var current_date = new Date();      
+  var d = new Date(current_date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+          break;
+      }
+  }
+}
+
 exports.parseTime = parseTime;
 exports.initDay = initDay;
 exports.temporize = temporize;
+exports.getCurrentDate = getCurrentDate;
+exports.sleep = sleep;

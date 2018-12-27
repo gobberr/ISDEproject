@@ -7,7 +7,7 @@ const logger = require('morgan');
 
 const authRoutes = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
-const apiRouter = require('./routes/api-router');
+const apiRouter = require('./routes/api-routes');
 
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -48,7 +48,7 @@ app.use('/profile', profileRoutes);
 /* GET home page. */
 app.get('/', function(req, res, next) {
   
-  res.render('index', { user: req.user, title: 'Homepage'});
+  res.render('homepage', { user: req.user });
 });
 
 // catch 404 and forward to error handler

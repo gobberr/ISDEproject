@@ -2,13 +2,21 @@
 
 Scenario: 
 
-1)  Si specifica un google calendar su cui fare riferimento  
+1)	Ci si logga con account google sfruttando le api Google+
+
+2)  Si specifica un google calendar su cui fare riferimento  
 	
-2)  Vengono selezionate le aule libere unitn nelle quali puoi stare per perdere tempo
+3)  Vengono selezionate le aule libere di povo
 
-3)  Ogni aula ha il link di google maps per vedere dove si trova il dipartimento nella mappa
+4) 	Merge degli impegni con le aule libere
 
-4)  Richiesta a facebook events per vedere quali eventi ci sono nel tuo tempo libero nella tua zona (integrazione maps e facebook 
+--------------------------------------------------------------------
+
+	TODO:
+
+--------------------------------------------------------------------
+
+5)  Richiesta a facebook events per vedere quali eventi ci sono nel tuo tempo libero nella tua zona (integrazione maps e facebook 
 	events)
 
 

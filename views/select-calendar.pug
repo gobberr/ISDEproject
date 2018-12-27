@@ -1,0 +1,39 @@
+extends header
+
+block content  
+  
+  .py-5
+    .container
+      #user
+        if user
+          .row        
+            .col-md-4      
+              form(method='get' action='/api/select-calendar')
+                .form-group
+                  h5 Insert the calendar name:    
+                  .row
+                  input#calendar.form-control(type='text', placeholder='' name='id')                                    
+                  .row
+                  br
+                  button.btn.btn-info(type='submit') Save   
+                  .row
+                  br
+                  .row
+                  h5 #{info}   
+        else
+          .row
+            .col-md-4
+              h4 Login to use the service
+
+
+      #button
+        if button          
+          .row
+            .col-md-4      
+              form(method='get' action='/api/calendar')
+                .form-group
+                  .row
+                  br                  
+                  button.btn.btn-primary(type='submit') Show events      
+
+  

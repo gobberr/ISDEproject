@@ -1,19 +1,25 @@
-extends layout
+extends header
 
-block content  
-  
+block content
+
   .py-5
     .container
-      .row
-        .col-md-4      
-          form(method='get' action='/api/calendar')
-            .form-group
-              h5 Insert the calendar name:    
-              .row
-              input#calendar.form-control(type='text', placeholder='' name='id')
-              .row
+      #user
+        if user
+          .row
+          h5 List of calendar events
+          .row
+          br  
+          #events
+          if (events.length>0)
+            each event in events    
+              h7 #{event}
               br
-              h5 #{info}
-              .row
-              button.btn.btn-info(type='submit') Save      
-      
+          else
+            h7 Nessun evento trovato nel calendario
+        else
+          .row
+            .col-md-4
+              h4 Login to use the service
+              
+              
