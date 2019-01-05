@@ -2,22 +2,13 @@
 
 Scenario: 
 
-1)	Ci si logga con account google sfruttando le api Google+
+1)	Login con account google sfruttando le api Google+
 
-2)  Si specifica un google calendar su cui fare riferimento  
+2)  Selezione di un google calendar su cui fare riferimento  
 	
-3)  Vengono selezionate le aule libere di povo
+3)  Selezione delle aule libere di povo
 
-4) 	Merge degli impegni con le aule libere
-
---------------------------------------------------------------------
-
-	TODO:
-
---------------------------------------------------------------------
-
-5)  Richiesta a facebook events per vedere quali eventi ci sono nel tuo tempo libero nella tua zona (integrazione maps e facebook 
-	events)
+4) 	Merge degli impegni nel calendario con le aule libere
 
 
 Setup:

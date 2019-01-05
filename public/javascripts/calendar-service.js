@@ -42,7 +42,7 @@ function authorize(callback, calendarId, googleIdReq) {
     token.expiry_date = Number(currentToken.expiry_date);
     oAuth2Client.setCredentials(token);    
         
-    callback(oAuth2Client, calendarId);
+    callback(oAuth2Client, calendarId, googleIdReq);
     
   }).catch((err) => {
     console.log(err)
@@ -53,7 +53,7 @@ function authorize(callback, calendarId, googleIdReq) {
  * Lists the events on the user's primary calendar.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function saveEvents(auth, idCalendar) {
+function saveEvents(auth, idCalendar, googleIdReq) {
   
   const calendar = google.calendar({version: 'v3', auth});
   calendar.events.list({
@@ -78,6 +78,7 @@ function saveEvents(auth, idCalendar) {
           if(current_date_format === event.start.dateTime.substring(0, 10)) {              
             
             Events.findOne({
+              googleId: googleIdReq,
               title: event.summary,
               date: event.start.dateTime.substring(0, 10),
               start_time: /*time.parseTime(*/event.start.dateTime.substring(11, 16),
@@ -88,6 +89,7 @@ function saveEvents(auth, idCalendar) {
               } else {
                 // create a new record for token and save it
                 new Events({
+                  googleId: googleIdReq,
                   title: event.summary,
                   date: event.start.dateTime.substring(0, 10),
                   start_time: /*time.parseTime(*/event.start.dateTime.substring(11, 16),

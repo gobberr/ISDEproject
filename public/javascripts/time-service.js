@@ -1,5 +1,3 @@
-
-
 /**
  * TODO: 
  * Return the array of your day with events merged with freerooms
