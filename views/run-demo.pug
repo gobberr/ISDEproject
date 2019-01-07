@@ -6,18 +6,53 @@ block content
     .container
       #user
         if user
-          .row
-          h5 Result
-          .row
-          br  
-          #planning
-          if (planning.length>0)
-            each event in planning    
-              h7 #{event}
+          #merged
+            if merged
+              .row
+              h5 Result
+              .row
+              br  
+              #planning
+              if (planning)
+                each event in planning                  
+                  h7 #{event}
+                  br
+              else
+                h7 {null}
+              
+            unless merged
+              .row
+              h3 [Warning] Not yet merged              
               br
-          else
-            h7 Error
+              .row
+              br
+              h5 Step 0: Select a calendar if you didn't select yet
+              br
+              .row
+              br                                    
+              form(method='get' action='/api/run-demo')
+                .form-group
+                  h5 Step 1: Clean the envoirment using this button
+                  .row                    
+                  button.btn.btn-info(type='submit' name='clean' id='clean2') Clean                                    
+              .row
+              br
+              form(method='get' action='/api/run-demo')
+                .form-group  
+                  h5 Step 2: Merge the events 
+                  .row                    
+                  button.btn.btn-info(type='submit') Merge
+              .row
+              br
+              form(method='get' action='/api/run-demo')
+                .form-group  
+                  h5 Step 3: See the result
+                  .row                    
+                  button.btn.btn-info(type='submit') Print the result                                    
+              br
+              
+
         else
           .row
-            .col-md-4
+            .col-md-5
               h4 Login with Google+ to use the service

@@ -20,20 +20,23 @@ block content
                   br
                   .row
                   h5 #{info}   
-        else
+
+          #button
+            if button          
+              .row
+                .col-md-4      
+                  form(method='get' action='/api/calendar')
+                    .form-group
+                      .row
+                      br                  
+                      button.btn.btn-primary(type='submit') Show events    
+
+        unless user
           .row
-            .col-md-2
+            .col-md-5
               h4 Login with Google+ to use the service
 
 
-      #button
-        if button          
-          .row
-            .col-md-4      
-              form(method='get' action='/api/calendar')
-                .form-group
-                  .row
-                  br                  
-                  button.btn.btn-primary(type='submit') Show events      
+       
 
   

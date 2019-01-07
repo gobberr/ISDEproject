@@ -18,18 +18,17 @@ router.get('/unitn', function(req, res, next) {
 
 router.get('/select-calendar', function (req, res, next) { 
   // if is logged
-  if(true) { // FIXME: check req.user if is logged
-    // if the calendar is already selected
-    let id = '111505499228238424686'; // FIXME: get id from req.user.googleId
+  if(req.user) { 
+    // if the calendar is already selected    
     if(JSON.stringify(req.query.id)) { 
       // initialize calendar saving all events found
-      calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2), id /*req.user.googleId*/)    
+      calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2), /*id*/ req.user.googleId)    
       res.render('select-calendar', { user: req.user, info: 'You have choose the calendar \'' + req.query.id + '\'', button: true })      
     
     } else {
       // before select calendar, remove all events in database in order to clean the envoirment
       // console.log(req.user)
-      Events.deleteMany({ googleId: id/*req.user.googleId*/ }, function(err, events) {            
+      Events.deleteMany({ googleId: req.user.googleId }, function(err, events) {            
         res.render('select-calendar', { user: req.user })  
       });
     }
@@ -40,7 +39,8 @@ router.get('/select-calendar', function (req, res, next) {
 
 router.get('/calendar', function(req, res, next) {
   // retrieve all events in database
-    Events.find( { googleId: req.user.googleId } , function(err, events) {
+    Events.find( { googleId: req.user.googleId } , function(err, events) {      
+      if(err) console.log('Error retrieving data from mongo')
       res.render('calendar', { user: req.user, events: events });  
     });  
 });
@@ -48,16 +48,23 @@ router.get('/calendar', function(req, res, next) {
 router.get('/run-demo', function(req, res, next) {
   // if is logged
   if (req.user) {
-    // get free rooms and events, merge it and print the result  
-    unitn.easyroomRequest()
-    .then((obj) => {
-      let rooms = unitn.createRoomsObject(obj.data);      
-      let freeRooms = unitn.getFreeRooms(rooms);
-      Events.find({ googleId: req.user.googleId }, function(err, events) {
-        let planning = time.merge(freeRooms, events)  
-        res.render('run-demo', { user: req.user, planning: planning });
-      });      
-    })  
+    let merged = true // get this variable from context
+    if(merged) {
+      // get free rooms and events, merge it and print the result  
+      unitn.easyroomRequest()
+      .then((obj) => {
+        let rooms = unitn.createRoomsObject(obj.data);      
+        let freeRooms = unitn.getFreeRooms(rooms);
+        Events.find({ googleId: req.user.googleId }, function(err, events) {
+          let planning = time.merge(freeRooms, events, req.user.googleId) 
+          console.log('render this data')
+          console.log(planning)  
+          res.render('run-demo', { user: req.user, planning: planning, merged: false });
+        });      
+      })
+    } else {
+      // TODO: render the procedure to merge
+    }
   } else {
     res.render('run-demo', { user: req.user });
   }
@@ -65,7 +72,7 @@ router.get('/run-demo', function(req, res, next) {
 
 router.get('/maintenance', function(req, res, next) {
   
-  //print a new token
+  //create a new token
   let newToken = maintenance.getAccessToken();
   res.render('maintenance', { user: req.user, token: newToken });
   

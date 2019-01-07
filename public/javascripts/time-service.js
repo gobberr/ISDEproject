@@ -1,16 +1,23 @@
+const db = require('./database-service');
+
 /**
- * TODO: 
- * Return the array of your day with events merged with freerooms
- * @param {*} freeRooms 
- * @param {*} events 
+ *    TODO:   
+ * 
+ *    Flow:
+ *    1.  Init an empty day object 
+ *    2.  Remove time specified in events
+ *    3.  Check if there are freerooms where stay in the remaining time  
+ * 
+ * @param {Array} freeRooms 
+ * @param {Array} events 
+ * @param {String} userId - googleId
+ * @returns {Array} array of your day with events merged with freerooms
  */
-function merge(freeRooms, events) {
-  let result = [];
-  result.push('Free rooms')
-  result.push(freeRooms)
-  result.push('Events')
-  result.push(events)
-  return result
+function merge(freeRooms, events, userId) {
+  
+  db.initDay(userId);
+  db.setEvent(events);
+  db.setFreeRooms(freeRooms);  
 }
 
 /**

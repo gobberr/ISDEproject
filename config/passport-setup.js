@@ -23,7 +23,7 @@ passport.use(
   }, (accessToken,refreshToken,profile,done) => {
     //passport callback function
     //check if user exists in database
-   //console.dir(profile,{depth: 3,colors: true});
+    //console.dir(profile,{depth: 3,colors: true});
     User.findOne({
       googleId: profile.id
     }).then((currentUser) => {
@@ -59,7 +59,7 @@ passport.use(
           refresh_token: '1/ljF6aZakph6PcMmLD4fmulgk9FcSUKhFr_koesY0J-7Ott3N0oRkw2AVSzFKCv7b',    
           scope: 'https://www.googleapis.com/auth/calendar',    
           token_type: 'Bearer',
-          expiry_date: '1545480906667',    
+          expiry_date: '1645480906667', //default '1545480906667'    
         }).save().then((newToken) => {
           //console.log('new token created: ' + newToken)
           done(null, newToken)
