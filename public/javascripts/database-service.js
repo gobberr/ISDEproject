@@ -47,12 +47,6 @@ function initDay(userId) {
   console.log('initDay')
   let currentDate = time.getCurrentDate();
   console.log('currentDate: ' + currentDate)
-
-  // delete object if already exist
-  //Day.deleteMany({ googleId: userId, date: currentDate }, function(err, result) {            
-    //if(err) console.log(err)     
-    //console.log('a')   
-  //});
   
   // create a new object
   new Day({
@@ -60,6 +54,19 @@ function initDay(userId) {
     date: currentDate,  
     slot_day: createEmptySlotDay()
   }).save()
+}
+
+/**
+ * Deleted field of this day of userId in the day-model 
+ * @param {*} userId 
+ */
+function deleteMergedDay(userId) {
+  // delete object if already exist
+  let currentDate = time.getCurrentDate();
+  Day.deleteMany({ googleId: userId, date: currentDate }, function(err, result) {            
+    if(err) console.log(err) 
+    console.log('clean completed successfully')        
+  });
 }
 
 /**
@@ -85,6 +92,8 @@ function setFreeRooms(freeRooms) {
   //console.log(freeRooms)
 }
 
+
+
 function createEmptySlotDay() {
     return [{ start_slot: '0900', end_slot: '0930', event: 'Prova', freeRooms: [1,2,3]}]
 }
@@ -93,3 +102,4 @@ exports.initDay = initDay;
 exports.setEvent = setEvent;
 exports.setFreeRooms = setFreeRooms;
 exports.getMergedDay = getMergedDay;
+exports.deleteMergedDay = deleteMergedDay;

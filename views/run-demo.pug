@@ -5,53 +5,60 @@ block content
   .py-5
     .container
       #user
-        if user
-          #merged
-            if merged
+        if user                        
               .row
-              h5 Result
-              .row
-              br  
-              #planning
-              if (planning)
-                each event in planning                  
-                  h7 #{event}
-                  br
-              else
-                h7 {null}
-              
-            unless merged
-              .row
-              h3 [Warning] Not yet merged              
+              #procedure
+              if procedure
+                h3 Follow this procedure:                            
               br
-              .row
+              .row              
+              #instruction
+              if instruction
+                h5 Step 0: Select a calendar if you have not selected it yet              
               br
-              h5 Step 0: Select a calendar if you didn't select yet
-              br
-              .row
-              br                                    
-              form(method='get' action='/api/run-demo')
-                .form-group
-                  h5 Step 1: Clean the envoirment using this button
-                  .row                    
-                  button.btn.btn-info(type='submit' name='clean' id='clean2') Clean                                    
-              .row
-              br
-              form(method='get' action='/api/run-demo')
-                .form-group  
-                  h5 Step 2: Merge the events 
-                  .row                    
-                  button.btn.btn-info(type='submit') Merge
-              .row
-              br
-              form(method='get' action='/api/run-demo')
-                .form-group  
-                  h5 Step 3: See the result
-                  .row                    
-                  button.btn.btn-info(type='submit') Print the result                                    
-              br
-              
-
+              .row              
+              #clean
+                if clean
+                  form(method='get' action='/api/run-demo/clean')
+                    .form-group
+                      h5 Step 1: Clean the envoirment using this button
+                      .row                    
+                      button.btn.btn-info(type='submit') Clean                                    
+                  .row
+                  br                            
+              #merge
+                if merge
+                  form(method='get' action='/api/run-demo/set')
+                    .form-group
+                      h5 Step 2: Merge the events with the freerooms
+                      .row                    
+                      button.btn.btn-info(type='submit') Merge                                    
+                  .row
+                  br              
+              #get
+                if get
+                  form(method='get' action='/api/run-demo/result')
+                    .form-group
+                      h5 Step 3: Show the result
+                      .row                    
+                      button.btn.btn-info(type='submit') Show                                    
+                  .row
+                  br              
+              #result
+                if result
+                  .row
+                  h3 Result 
+                  .row
+                  br  
+                  #planning
+                  if (planning)
+                    each event in planning                  
+                      h7 #{event}
+                      br
+                  else
+                    h7 {null}
+                  
+                
         else
           .row
             .col-md-5

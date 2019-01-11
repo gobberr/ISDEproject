@@ -15,8 +15,11 @@ const db = require('./database-service');
  */
 function merge(freeRooms, events, userId) {
   
+  console.log('init day..')
   db.initDay(userId);
+  console.log('writing events..')
   db.setEvent(events);
+  console.log('writing freerooms..')
   db.setFreeRooms(freeRooms);  
 }
 
