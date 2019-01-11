@@ -14,7 +14,8 @@ router.get('/unitn', function(req, res, next) {
     .then((obj) => {
       let rooms = unitn.createRoomsObject(obj.data);      
       let freeRooms = unitn.getFreeRooms(rooms);
-      res.render('unitn', { user: req.user, aule: freeRooms });    
+      let renderedTable = unitn.createTableObj(freeRooms)
+      res.render('unitn', { user: req.user, aule: renderedTable });    
     })
 });
 
@@ -79,7 +80,7 @@ router.get('/run-demo/set', function(req, res, next) {
     let freeRooms = unitn.getFreeRooms(rooms);
     Events.find({ googleId: req.user.googleId }, function(err, events) {
       if(err) console.log('no events stored in db')
-      time.merge(freeRooms, events, req.user.googleId) 
+      time.mergeEvents(freeRooms, events, req.user.googleId) 
       res.render('run-demo', { user: req.user, get: true, procedure: true });
     });
   });
@@ -94,7 +95,5 @@ router.get('/run-demo/result', function(req, res, next) {
     res.render('run-demo', { user: req.user, result: true, planning: events });
   })
 });
-
-
 
 module.exports = router;

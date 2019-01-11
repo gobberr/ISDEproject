@@ -12,14 +12,16 @@ block content
           br  
           #events
           if (events.length>0)
-            each event in events    
-              h7 Title: #{event.title}              
-              br
-              h7 Start: #{event.start_time}
-              br
-              h7 End: #{event.end_time}
-              br
-              br
+            table(style='width:70%', border='1')  
+              tr
+                th Event name:
+                th Start time:
+                th Finish time:
+              each event in events  
+                tr  
+                  th #{event.title}              
+                  th #{event.start_time}
+                  th #{event.end_time}                                
           else
             h7 Nessun evento trovato nel calendario
         else

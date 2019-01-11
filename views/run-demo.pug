@@ -53,12 +53,21 @@ block content
                   #planning
                   if (planning)
                     each event in planning                  
-                      h7 #{event}
-                      br
+                      h6 Date: #{event.date}                      
+                      h6 Programmed day:
+                      
+                      table(style='width:70%', border='1')  
+                        tr
+                          th Time slot
+                          th Free rooms
+                          th Event programmed   
+                        each slot in event.slot_day
+                          tr                          
+                            th [#{slot.start_slot} - #{slot.end_slot}]                        
+                            th #{slot.freeRooms}                        
+                            th #{slot.event}                      
                   else
-                    h7 {null}
-                  
-                
+                    h7 {null}                                  
         else
           .row
             .col-md-5

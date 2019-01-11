@@ -109,13 +109,17 @@ function getFreeRooms(rooms) {
     }
     // Add the object to the array
     freeRooms.push(output);
-  }
-
-  // Return the new computed array to fill the HTML page
+  }  
   return freeRooms;
 }
 
-// MODULE EXPORTS
-exports.easyroomRequest = easyroomRequest;    // Make the function public
+//TODO: adapt the object in order to be rendere as a table in frontend
+function createTableObj(freeRooms) {  
+  return freeRooms;
+}
+
+
+exports.easyroomRequest = easyroomRequest; 
 exports.createRoomsObject = createRoomsObject;
 exports.getFreeRooms = getFreeRooms;
+exports.createTableObj = createTableObj;

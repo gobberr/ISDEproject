@@ -1,8 +1,6 @@
 const db = require('./database-service');
 
-/**
- *    TODO:   
- * 
+/** 
  *    Flow:
  *    1.  Init an empty day object 
  *    2.  Remove time specified in events
@@ -13,14 +11,10 @@ const db = require('./database-service');
  * @param {String} userId - googleId
  * @returns {Array} array of your day with events merged with freerooms
  */
-function merge(freeRooms, events, userId) {
-  
-  console.log('init day..')
-  db.initDay(userId);
-  console.log('writing events..')
-  db.setEvent(events);
-  console.log('writing freerooms..')
-  db.setFreeRooms(freeRooms);  
+function mergeEvents(freeRooms, events, userId) {  
+  let tmp = db.setEvent(events);
+  let merge = db.setFreeRooms(freeRooms, tmp);
+  db.finalizeDay(userId, merge);
 }
 
 /**
@@ -40,30 +34,27 @@ function getCurrentDate() {
 }
 
 /**
- * Sleep program for n milliseconds
- * @param {*} milliseconds time to sleep
- */
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-      if ((new Date().getTime() - start) > milliseconds){
-          break;
-      }
-  }
-}
-
-/**
  * The from, to values received from the server are strings formatted as hh:mm:ss
  * This function converts the string in an integer that is more convenient during comparisons
  * @param {*} time 
  */
 function parseTime(time) {
-  var tmp = time.split(":");
+  let tmp = time.split(":");
   // The resulting integer will be hhmm
   return parseInt(tmp[0] + tmp[1]);
 }
 
+/**
+ * TODO: test this function
+ * from 0000 to 00:00
+ * @param {*} time 
+ */
+function reverseParseTime(time) {  
+  
+  return (stringTime.toString().substring(1, 2) + ':' + stringTime.toString().substring(3, 4))
+}
+
 exports.parseTime = parseTime;
-exports.merge = merge;
+exports.reverseParseTime = reverseParseTime;
+exports.mergeEvents = mergeEvents;
 exports.getCurrentDate = getCurrentDate;
-exports.sleep = sleep;
