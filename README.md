@@ -1,14 +1,25 @@
 # ISDEproject
 
-Scenario: 
+This web service offers one-day planning. Using the Google Calendar and EasyRoom APIs, it returns the merge of the events with the free classrooms in which to spend the free time.
 
-1)	Login con account google sfruttando le api Google+
+APIs:
 
-2)  Selezione di un google calendar su cui fare riferimento  
-	
-3)  Selezione delle aule libere unitn di povo
+1.  Google +
 
-4) 	Merge degli impegni nel calendario con le aule libere
+2.  Google Calendar
+
+3.  EasyRoom
+
+4.  Mongodb
+
+
+##Scenario: 
+
+1.	Sign in with google accounts using Google+ APIs
+
+2.  Selecting a google calendar to get your events	
+
+3. 	Merge of events in the calendar with free classrooms of University of Trento
 
 
 ## Setup:
@@ -18,4 +29,3 @@ Scenario:
 2. Start the service `npm start`
 
 3. Go to `localhost:3000`
-	
