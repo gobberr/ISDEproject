@@ -8,6 +8,7 @@ const logger = require('morgan');
 const authRoutes = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
 const apiRouter = require('./routes/api-routes');
+const demoRoutes = require('./routes/demo-router');
 
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -44,6 +45,7 @@ mongoose.connect(keys.mongoDB.dbURI, { useNewUrlParser: true }, () => {
 app.use('/api', apiRouter);
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
+app.use('/demo', demoRoutes);
 
 /* GET home page. */
 app.get('/', function(req, res, next) {

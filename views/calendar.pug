@@ -13,12 +13,12 @@ block content
           #events
           if (events.length>0)
             table(style='width:70%', border='1')  
-              tr
+              tr(align='center')
                 th Event name:
                 th Start time:
                 th Finish time:
               each event in events  
-                tr  
+                tr(align='center')  
                   th #{event.title}              
                   th #{event.start_time}
                   th #{event.end_time}                                

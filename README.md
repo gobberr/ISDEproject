@@ -6,18 +6,16 @@ Scenario:
 
 2)  Selezione di un google calendar su cui fare riferimento  
 	
-3)  Selezione delle aule libere di povo
+3)  Selezione delle aule libere unitn di povo
 
 4) 	Merge degli impegni nel calendario con le aule libere
 
 
-Setup:
+## Setup:
 
-1)	Installare le dipendenze
-	npm install
+1. Install the dependencies: `npm install`
 
-2) 	Avviare il servizio
-	npm start
+2. Start the service `npm start`
 
-3)	Accedere al servizio
-	localhost:3000
+3. Go to `localhost:3000`
+	

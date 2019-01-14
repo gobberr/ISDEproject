@@ -10,7 +10,7 @@ function deleteMergedDay(userId) {
   let currentDate = time.getCurrentDate();
   Day.deleteMany({ googleId: userId, date: currentDate }, function(err, result) {            
     if(err) console.log(err) 
-    console.log('clean completed successfully')        
+    //console.log('clean completed successfully')        
   });
 }
 
@@ -20,7 +20,7 @@ function deleteMergedDay(userId) {
  */
 function finalizeDay(userId, mergedDay) {
       
-  console.log('db.finalizeDay...')
+  //console.log('db.finalizeDay...')
   let currentDate = time.getCurrentDate();  
   // create a new object and save it
   new Day({
@@ -31,20 +31,21 @@ function finalizeDay(userId, mergedDay) {
 }
 
 /**
- * TODO:
  * Create a new slot for each day section. Then push the events in the slot
  * @param {*} events - google user id
  * @returns {Array} - array of slot with events
  */
 function setEvent(events) {  
-  console.log('db.setEvent...')  
+  //console.log('db.setEvent...')  
   let emptySlot = createEmptySlotDay()  
   for(let i=0; i<events.length; i++) {    
-    for(let j=0; j<emptySlot.length; j++) {
-      //console.log('i=' + i + ', j=' + j)
-      //FIXME: wrong check time when add events
-      if(time.parseTime(events[i].start_time) == time.parseTime(emptySlot[j].start_slot) || (time.parseTime(events[i].end_time) <= time.parseTime(emptySlot[j].end_slot))) {
-        //console.log('match')
+    for(let j=0; j<emptySlot.length; j++) {         
+      // check if event start or finish in this slot
+      if(time.parseTime(events[i].start_time) == time.parseTime(emptySlot[j].start_slot) || (time.parseTime(events[i].end_time) == time.parseTime(emptySlot[j].end_slot))) {        
+        emptySlot[j].event = events[i].title;
+      }
+      // check if event include other slot in the middle
+      if(time.parseTime(events[i].start_time) <= time.parseTime(emptySlot[j].start_slot) && (time.parseTime(events[i].end_time) >= time.parseTime(emptySlot[j].end_slot))) {        
         emptySlot[j].event = events[i].title;
       }
     }
@@ -53,16 +54,14 @@ function setEvent(events) {
   return emptySlot;
 }
 
-/**
- * TODO:
+/** 
  * Create a new slot for each day section. Then push the events in the slot
  * @param {*} freeRooms - object that rapresent free rooms in povo
  * @param {tempDay} tempDay - object to integrate with free rooms
  * @returns {Array} - array of slot with merged day
  */
 function setFreeRooms(freeRooms, tempDay) {
-  console.log('db.setFreeRooms...')
-  console.log(freeRooms)
+  //console.log('db.setFreeRooms...')  
   for(let i=0; i<tempDay.length; i++) {
     tempDay[i].freeRooms = getFreeRoomInSlot(freeRooms, time.parseTime(tempDay[i].start_slot), time.parseTime(tempDay[i].end_slot));
   }
@@ -72,8 +71,7 @@ function setFreeRooms(freeRooms, tempDay) {
 function getFreeRoomInSlot(freeRooms, from, to) {
   let arrayRoom = [];
   for(let i=0; i<freeRooms.length; i++) {
-    if(isRoomFreeInSlot(freeRooms[i], from, to)) {
-      console.log('Room: ' + freeRooms[i].code.substring(6,10) + ' is free in slot [' + from + ', ' + to + ']')
+    if(isRoomFreeInSlot(freeRooms[i], from, to)) {      
       arrayRoom.push(freeRooms[i].code.substring(6,10))
     }
   }

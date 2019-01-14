@@ -19,7 +19,7 @@ block content
               .row              
               #clean
                 if clean
-                  form(method='get' action='/api/run-demo/clean')
+                  form(method='get' action='/demo/clean')
                     .form-group
                       h5 Step 1: Clean the envoirment using this button
                       .row                    
@@ -28,7 +28,7 @@ block content
                   br                            
               #merge
                 if merge
-                  form(method='get' action='/api/run-demo/set')
+                  form(method='get' action='/demo/set')
                     .form-group
                       h5 Step 2: Merge the events with the freerooms
                       .row                    
@@ -37,7 +37,7 @@ block content
                   br              
               #get
                 if get
-                  form(method='get' action='/api/run-demo/result')
+                  form(method='get' action='/demo/result')
                     .form-group
                       h5 Step 3: Show the result
                       .row                    
@@ -56,15 +56,15 @@ block content
                       h6 Date: #{event.date}                      
                       h6 Programmed day:
                       
-                      table(style='width:70%', border='1')  
-                        tr
+                      table(style='width:20%', border='1').fixed  
+                        tr(align='center')
                           th Time slot
                           th Free rooms
                           th Event programmed   
                         each slot in event.slot_day
-                          tr                          
+                          tr(align='center')                          
                             th [#{slot.start_slot} - #{slot.end_slot}]                        
-                            th #{slot.freeRooms}                        
+                            th #{slot.freeRooms}                                                    
                             th #{slot.event}                      
                   else
                     h7 {null}                                  

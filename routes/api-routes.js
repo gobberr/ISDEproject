@@ -4,9 +4,8 @@ const unitn = require('../public/javascripts/unitn-service');
 const calendar = require('../public/javascripts/calendar-service');
 const time = require('../public/javascripts/time-service');
 const maintenance = require('../public/javascripts/maintenance-service');
-const db = require('../public/javascripts/database-service');
 const Events = require('../models/event-model');
-const Day = require('../models/day-model');
+
 
 router.get('/unitn', function(req, res, next) {
   // get all free room of povo
@@ -15,7 +14,8 @@ router.get('/unitn', function(req, res, next) {
       let rooms = unitn.createRoomsObject(obj.data);      
       let freeRooms = unitn.getFreeRooms(rooms);
       let renderedTable = unitn.createTableObj(freeRooms)
-      res.render('unitn', { user: req.user, aule: renderedTable });    
+      let renderedTableParsed = time.setFormatTime(renderedTable);
+      res.render('unitn', { user: req.user, aule: renderedTableParsed });    
     })
 });
 
@@ -54,46 +54,6 @@ router.get('/maintenance', function(req, res, next) {
   res.render('maintenance', { user: req.user, token: newToken });
 });
 
-router.get('/run-demo', function(req, res, next) {
-  console.log('run-demo')
-  // if is logged
-  if (req.user) {        
-    res.render('run-demo', { user: req.user, clean: true, instruction: true, procedure: true });    
-  }
-});
 
-// clean the db
-router.get('/run-demo/clean', function(req, res, next) { 
-  console.log('clean the db')
-  db.deleteMergedDay(req.user.googleId);
-  res.render('run-demo', { user: req.user, merge: true, procedure: true });
-});
-
-// write merged day in db
-router.get('/run-demo/set', function(req, res, next) { 
-  console.log('set data in db') 
-  
-  // get free rooms and events, merge it and print the result  
-  unitn.easyroomRequest()
-  .then((obj) => {
-    let rooms = unitn.createRoomsObject(obj.data);      
-    let freeRooms = unitn.getFreeRooms(rooms);
-    Events.find({ googleId: req.user.googleId }, function(err, events) {
-      if(err) console.log('no events stored in db')
-      time.mergeEvents(freeRooms, events, req.user.googleId) 
-      res.render('run-demo', { user: req.user, get: true, procedure: true });
-    });
-  });
-});
-
-// query here from db
-router.get('/run-demo/result', function(req, res, next) { 
-  console.log('get data from db')  
-  let currentDate = time.getCurrentDate();
-  Day.find({ googleId: req.user.googleId, date: currentDate }, function(err, events) {
-    if(err) console.error(err)
-    res.render('run-demo', { user: req.user, result: true, planning: events });
-  })
-});
 
 module.exports = router;

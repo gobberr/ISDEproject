@@ -44,17 +44,31 @@ function parseTime(time) {
   return parseInt(tmp[0] + tmp[1]);
 }
 
-/**
- * TODO: test this function
+/** 
  * from 0000 to 00:00
  * @param {*} time 
  */
 function reverseParseTime(time) {  
   
-  return (stringTime.toString().substring(1, 2) + ':' + stringTime.toString().substring(3, 4))
+  return (time.toString().substring(0, 2) + ':' + time.toString().substring(2, 4))
+}
+
+function setFormatTime(renderedTable) {
+  
+  
+  for(let i=0; i<renderedTable.length; i++) {
+    if(renderedTable[i].next_lesson) {
+      renderedTable[i].next_lesson[0] = reverseParseTime(renderedTable[i].next_lesson[0])
+      renderedTable[i].next_lesson[1] = reverseParseTime(renderedTable[i].next_lesson[1])
+    }
+    if(renderedTable[i].occupied_until) {      
+      renderedTable[i].occupied_until = reverseParseTime(renderedTable[i].occupied_until)
+    }
+  }
+  return renderedTable;
 }
 
 exports.parseTime = parseTime;
-exports.reverseParseTime = reverseParseTime;
 exports.mergeEvents = mergeEvents;
 exports.getCurrentDate = getCurrentDate;
+exports.setFormatTime = setFormatTime;

@@ -9,14 +9,28 @@ block content
           .row
           h5 List of UniTN rooms
           .row
-          br 
+          br  
           #aule
-          if (aule.length>0)      
-            each aula in aule
-              h7 #{JSON.stringify(aula)}
-              br
+          if (aule.length>0)
+            table(style='width:70%', border='1')  
+              tr(align='center')
+                th Room name:
+                th Occupied:
+                th Occupied until:                
+                th Next lessons:
+              each aula in aule  
+                tr(align='center') 
+                  th #{aula.code}
+                  th #{aula.occupied}              
+                  th #{aula.occupied_until}                  
+                  if aula.next_lesson
+                    th [ #{aula.next_lesson[0]} - #{aula.next_lesson[1]} ]
+                  else
+                    th
+                  
           else
             h7 Nessun aula libera trovata
+
         else
           .row
             .col-md-5
