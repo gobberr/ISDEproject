@@ -13,7 +13,7 @@ APIs:
 4.  Mongodb
 
 
-##Scenario: 
+## Scenario: 
 
 1.	Sign in with google accounts using Google+ APIs
 
@@ -28,4 +28,4 @@ APIs:
 
 2. Start the service `npm start`
 
-3. Go to `localhost:3000`
+3. Go to `localhost:3000` and follow the instructions
