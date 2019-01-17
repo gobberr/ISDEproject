@@ -12,6 +12,8 @@ router.get('/', function(req, res, next) {
     // if is logged
     if (req.user) {        
       res.render('run-demo', { user: req.user, clean: true, instruction: true, procedure: true });    
+    } else {
+      res.render('select-calendar', { user: req.user })  
     }
   });
   
