@@ -1,6 +1,8 @@
 # ISDEproject
 
-This web service offers one-day planning. Using the Google Calendar and EasyRoom APIs, it returns the merge of the events with the free classrooms in which to spend the free time.
+This web service offers one-day planning. Using the Google Calendar and EasyRoom APIs, it returns the merge of the events with the free classrooms in which to spend the free time. Check it out! 
+
+## https://isde-project.herokuapp.com
 
 APIs:
 
