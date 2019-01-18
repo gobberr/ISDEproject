@@ -20,16 +20,13 @@ passport.use(
     callbackURL:'/auth/google/redirect',
     clientID: keys.google.clientID,
     clientSecret: keys.google.clientSecret
-  }, (accessToken,refreshToken,profile,done) => {
-    //passport callback function
-    //check if user exists in database
-    //console.dir(profile,{depth: 3,colors: true});
+  }, (accessToken,refreshToken,profile,done) => {    
+    //check if user exists in database    
     User.findOne({
       googleId: profile.id
     }).then((currentUser) => {
       if(currentUser) {
-        //already have user
-        //console.log('user is: ' + currentUser);
+        //already have user        
         done(null, currentUser);
       } else {
         //create new user and save it
@@ -38,8 +35,7 @@ passport.use(
           provider: 'google',                    
           googleId: profile.id,                    
           email: profile.emails[0].value,                    
-        }).save().then((newUser) => {
-          //console.log('new user created: ' + newUser);
+        }).save().then((newUser) => {          
           done(null, newUser);
         })     
       }
@@ -48,8 +44,7 @@ passport.use(
     Token.findOne({
       googleId: profile.id
     }).then((currentToken) => {
-      if(currentToken) {                
-        //console.log('currentToken: ' + currentToken);
+      if(currentToken) {                        
         done(null, currentToken);
       } else {
         // create a new record for token and save it
@@ -60,8 +55,7 @@ passport.use(
           scope: 'https://www.googleapis.com/auth/calendar',    
           token_type: 'Bearer',
           expiry_date: '1645480906667', //default '1545480906667'    
-        }).save().then((newToken) => {
-          //console.log('new token created: ' + newToken)
+        }).save().then((newToken) => {          
           done(null, newToken)
         })
       }

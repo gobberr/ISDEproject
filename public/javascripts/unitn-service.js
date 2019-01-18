@@ -2,14 +2,14 @@ const axios = require('axios')
 const qs = require('qs')
 const common = require('./time-service')
 const current_date = new Date();
-// Get the number of the day, month (0-11 so we need to do +1), and the year
 const current_time = parseInt('' + current_date.getHours() + ("0" + current_date.getMinutes()).slice(-2));
-const easyroom = "https://easyroom.unitn.it/Orario/rooms_call.php";   // API of unitn to get the timetables
+const easyroom = "https://easyroom.unitn.it/Orario/rooms_call.php";   
 
-let params = {                      // Params object that contains the data used by the API
+// Params object that contains the data used by the API
+let params = {                      
   'form-type': 'rooms',
-  sede: 'E0503',                    // POVO  
-  date: '',                         // Filled later with current date
+  sede: 'E0503', // POVO  
+  date: '',      // Filled later with current date
   _lang: 'it'
 };
 
@@ -44,16 +44,14 @@ function createRoomsObject(data) {
 
       // Add the lecture to the corresponding class in the rooms array
       // If the room doesn't exist in the object, create a new array with the roomCode as key
-      if (!(roomCode in rooms)) {
-        //console.log("Creating array for " + roomCode);
+      if (!(roomCode in rooms)) {        
         rooms[roomCode] = new Array();
       }
       // Add the lecture to the array associated to the corresponding room
       rooms[roomCode].push(lessonHours);
     });
   } else {
-    // If no events are in the arrat, log it and exit
-    // console.log("No events!");
+    // If no events are in the arrat, log it and exit    
   }
   // Return the rooms object
   return rooms;
@@ -70,9 +68,7 @@ function getFreeRooms(rooms) {
   // Define the array to be returned
   let freeRooms = [];
   // For each room determine its status and the next lecture
-  for (let code in rooms) {
-    //console.log("Evaluating room " + code);
-    // Init the letiables
+  for (let code in rooms) {        
     let room = rooms[code];
     let occupied = false;
     let occupied_until = null;
@@ -84,12 +80,10 @@ function getFreeRooms(rooms) {
       let time = room[i];
       // Convert the strings hh:mm:ss to the integers hhmm
       let from = common.parseTime(time[0]);
-      let to = common.parseTime(time[1]);
-      //console.log(from, to)
+      let to = common.parseTime(time[1]);     
       // If the current time is past the start of the lecture but prior to its ending,
       // then the room is occupied
-      if (current_time > from && current_time < to) {
-        //console.log("Room " + code + " currently occupied")
+      if (current_time > from && current_time < to) {        
         occupied = true;
         // Set occupied_until to the end of the lecture
         occupied_until = to;
@@ -113,13 +107,6 @@ function getFreeRooms(rooms) {
   return freeRooms;
 }
 
-//TODO: adapt the object in order to be rendere as a table in frontend
-function createTableObj(freeRooms) {  
-  return freeRooms;
-}
-
-
 exports.easyroomRequest = easyroomRequest; 
 exports.createRoomsObject = createRoomsObject;
 exports.getFreeRooms = getFreeRooms;
-exports.createTableObj = createTableObj;

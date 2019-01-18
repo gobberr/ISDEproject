@@ -81,8 +81,8 @@ function saveEvents(auth, idCalendar, googleIdReq) {
               googleId: googleIdReq,
               title: event.summary,
               date: event.start.dateTime.substring(0, 10),
-              start_time: /*time.parseTime(*/event.start.dateTime.substring(11, 16),
-              end_time: /*time.parseTime(*/event.end.dateTime.substring(11, 16)
+              start_time: event.start.dateTime.substring(11, 16),
+              end_time: event.end.dateTime.substring(11, 16)
             }).then((currentEvents) => {
               if(currentEvents) {                
                   // console.log('Evento già presente: ' + currentEvents);                  
@@ -92,8 +92,8 @@ function saveEvents(auth, idCalendar, googleIdReq) {
                   googleId: googleIdReq,
                   title: event.summary,
                   date: event.start.dateTime.substring(0, 10),
-                  start_time: /*time.parseTime(*/event.start.dateTime.substring(11, 16),
-                  end_time: /*time.parseTime(*/event.end.dateTime.substring(11, 16)
+                  start_time: event.start.dateTime.substring(11, 16),
+                  end_time: event.end.dateTime.substring(11, 16)
                 }).save(); 
               }
             })   

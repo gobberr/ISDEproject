@@ -38,7 +38,7 @@ app.use(passport.session());
 
 //connect to mongodb
 mongoose.connect(keys.mongoDB.dbURI, { useNewUrlParser: true }, () => {
-  // console.log('Connected to mongodb');
+  console.log('Connected to mongodb');
 })
 
 //set up routes

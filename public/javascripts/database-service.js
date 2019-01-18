@@ -18,9 +18,7 @@ function deleteMergedDay(userId) {
  * Initialize day object
  * @param {String} userId - google user id
  */
-function finalizeDay(userId, mergedDay) {
-      
-  //console.log('db.finalizeDay...')
+function finalizeDay(userId, mergedDay) {      
   let currentDate = time.getCurrentDate();  
   // create a new object and save it
   new Day({
@@ -35,8 +33,7 @@ function finalizeDay(userId, mergedDay) {
  * @param {*} events - google user id
  * @returns {Array} - array of slot with events
  */
-function setEvent(events) {  
-  //console.log('db.setEvent...')  
+function setEvent(events) {    
   let emptySlot = createEmptySlotDay()  
   for(let i=0; i<events.length; i++) {    
     for(let j=0; j<emptySlot.length; j++) {         
@@ -49,8 +46,7 @@ function setEvent(events) {
         emptySlot[j].event = events[i].title;
       }
     }
-  }
-  //console.log(emptySlot)
+  }  
   return emptySlot;
 }
 
@@ -60,8 +56,7 @@ function setEvent(events) {
  * @param {tempDay} tempDay - object to integrate with free rooms
  * @returns {Array} - array of slot with merged day
  */
-function setFreeRooms(freeRooms, tempDay) {
-  //console.log('db.setFreeRooms...')  
+function setFreeRooms(freeRooms, tempDay) {  
   for(let i=0; i<tempDay.length; i++) {
     tempDay[i].freeRooms = getFreeRoomInSlot(freeRooms, time.parseTime(tempDay[i].start_slot), time.parseTime(tempDay[i].end_slot));
   }
@@ -79,7 +74,6 @@ function getFreeRoomInSlot(freeRooms, from, to) {
 }
 
 /**
- * FIXME: add more check for freerooms
  * @param {*} room - object room
  * @param {*} from - time in format hhmm of start slot
  * @param {*} to - time in format hhmm of end slot

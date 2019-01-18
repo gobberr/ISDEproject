@@ -13,9 +13,8 @@ router.get('/unitn', function(req, res, next) {
     .then((obj) => {
       let rooms = unitn.createRoomsObject(obj.data);      
       let freeRooms = unitn.getFreeRooms(rooms);
-      let renderedTable = unitn.createTableObj(freeRooms)
-      let renderedTableParsed = time.setFormatTime(renderedTable);
-      res.render('unitn', { user: req.user, aule: renderedTableParsed });    
+      let renderedTable = time.setFormatTime(freeRooms);           
+      res.render('unitn', { user: req.user, aule: renderedTable });    
     })
 });
 
@@ -25,12 +24,11 @@ router.get('/select-calendar', function (req, res, next) {
     // if the calendar is already selected    
     if(JSON.stringify(req.query.id)) { 
       // initialize calendar saving all events found
-      calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2), /*id*/ req.user.googleId)    
+      calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2), req.user.googleId)    
       res.render('select-calendar', { user: req.user, info: 'You have choose the calendar \'' + req.query.id + '\'', button: true })      
     
     } else {
-      // before select calendar, remove all events in database in order to clean the envoirment
-      // console.log(req.user)
+      // before select calendar, remove all events in database in order to clean the envoirment      
       Events.deleteMany({ googleId: req.user.googleId }, function(err, events) {            
         res.render('select-calendar', { user: req.user })  
       });
@@ -53,7 +51,5 @@ router.get('/maintenance', function(req, res, next) {
   let newToken = maintenance.getAccessToken();
   res.render('maintenance', { user: req.user, token: newToken });
 });
-
-
 
 module.exports = router;

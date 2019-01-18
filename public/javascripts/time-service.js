@@ -21,8 +21,8 @@ function mergeEvents(freeRooms, events, userId) {
  * Return the current date 
  */
 function getCurrentDate() {  
-  var current_date = new Date();      
-  var d = new Date(current_date),
+  let current_date = new Date();      
+  let d = new Date(current_date),
     month = '' + (d.getMonth() + 1),
     day = '' + d.getDate(),
     year = d.getFullYear();
@@ -48,14 +48,11 @@ function parseTime(time) {
  * from 0000 to 00:00
  * @param {*} time 
  */
-function reverseParseTime(time) {  
-  
+function reverseParseTime(time) {    
   return (time.toString().substring(0, 2) + ':' + time.toString().substring(2, 4))
 }
 
-function setFormatTime(renderedTable) {
-  
-  
+function setFormatTime(renderedTable) {    
   for(let i=0; i<renderedTable.length; i++) {
     if(renderedTable[i].next_lesson) {
       renderedTable[i].next_lesson[0] = reverseParseTime(renderedTable[i].next_lesson[0])

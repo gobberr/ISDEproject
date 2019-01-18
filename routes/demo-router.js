@@ -7,8 +7,7 @@ const Day = require('../models/day-model');
 const Events = require('../models/event-model');
 
 
-router.get('/', function(req, res, next) {
-    //console.log('run-demo')
+router.get('/', function(req, res, next) {    
     // if is logged
     if (req.user) {        
       res.render('run-demo', { user: req.user, clean: true, instruction: true, procedure: true });    
@@ -18,15 +17,13 @@ router.get('/', function(req, res, next) {
   });
   
   // clean the db
-  router.get('/clean', function(req, res, next) { 
-    //console.log('clean the db')
+  router.get('/clean', function(req, res, next) {     
     db.deleteMergedDay(req.user.googleId);
     res.render('run-demo', { user: req.user, merge: true, procedure: true });
   });
   
   // write merged day in db
-  router.get('/set', function(req, res, next) { 
-    //console.log('set data in db')     
+  router.get('/set', function(req, res, next) {       
     unitn.easyroomRequest()
     .then((obj) => {
       let rooms = unitn.createRoomsObject(obj.data);      
@@ -40,8 +37,7 @@ router.get('/', function(req, res, next) {
   });
   
   // query here from db
-  router.get('/result', function(req, res, next) { 
-    //console.log('get data from db')  
+  router.get('/result', function(req, res, next) {     
     let currentDate = time.getCurrentDate();
     Day.find({ googleId: req.user.googleId, date: currentDate }, function(err, events) {
       if(err) console.error(err)
