@@ -9,10 +9,10 @@ const Events = require('../models/event-model');
 
 router.get('/', function(req, res, next) {    
     // if is logged
-    if (req.user) {        
+    if (req.user) {
       res.render('run-demo', { user: req.user, clean: true, instruction: true, procedure: true });    
     } else {
-      res.render('select-calendar', { user: req.user })  
+      res.render('run-demo', { user: req.user })  
     }
   });
   
@@ -25,18 +25,21 @@ router.get('/', function(req, res, next) {
   // write merged day in db
   router.get('/set', function(req, res, next) {       
     
+    // get free room from unitn-service 
     request({
       uri: 'https://unitn-service.herokuapp.com/demo',    
       method: 'GET',    
     }, function(error, response) {
+
+      // then set events retrieved from db and merge
       if (!error && response.statusCode === 200) {                
         Events.find({ googleId: req.user.googleId }, function(err, events) {
           if(err) console.log('no events stored in db')
           time.mergeEvents(JSON.parse(response.body), events, req.user.googleId) 
+
+          //render the result to frontend
           res.render('run-demo', { user: req.user, get: true, procedure: true });
         });
-      } else {
-        console.log('error')
       }
     });     
   });
