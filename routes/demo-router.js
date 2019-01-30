@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const unitn = require('../public/javascripts/unitn-service');
+const request = require('request');
 const db = require('../public/javascripts/database-service');
 const time = require('../public/javascripts/time-service');
 const Day = require('../models/day-model');
@@ -24,16 +24,21 @@ router.get('/', function(req, res, next) {
   
   // write merged day in db
   router.get('/set', function(req, res, next) {       
-    unitn.easyroomRequest()
-    .then((obj) => {
-      let rooms = unitn.createRoomsObject(obj.data);      
-      let freeRooms = unitn.getFreeRooms(rooms);
-      Events.find({ googleId: req.user.googleId }, function(err, events) {
-        if(err) console.log('no events stored in db')
-        time.mergeEvents(freeRooms, events, req.user.googleId) 
-        res.render('run-demo', { user: req.user, get: true, procedure: true });
-      });
-    });
+    
+    request({
+      uri: 'https://unitn-service.herokuapp.com/demo',    
+      method: 'GET',    
+    }, function(error, response) {
+      if (!error && response.statusCode === 200) {                
+        Events.find({ googleId: req.user.googleId }, function(err, events) {
+          if(err) console.log('no events stored in db')
+          time.mergeEvents(JSON.parse(response.body), events, req.user.googleId) 
+          res.render('run-demo', { user: req.user, get: true, procedure: true });
+        });
+      } else {
+        console.log('error')
+      }
+    });     
   });
   
   // query here from db

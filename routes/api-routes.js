@@ -1,21 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const unitn = require('../public/javascripts/unitn-service');
+const request = require('request');
 const calendar = require('../public/javascripts/calendar-service');
-const time = require('../public/javascripts/time-service');
 const maintenance = require('../public/javascripts/maintenance-service');
 const Events = require('../models/event-model');
 
 
 router.get('/unitn', function(req, res, next) {
+  
   // get all free room of povo
-  unitn.easyroomRequest()
-    .then((obj) => {
-      let rooms = unitn.createRoomsObject(obj.data);      
-      let freeRooms = unitn.getFreeRooms(rooms);
-      let renderedTable = time.setFormatTime(freeRooms);           
-      res.render('unitn', { user: req.user, aule: renderedTable });    
-    })
+  request({
+    uri: 'https://unitn-service.herokuapp.com',    
+    method: 'GET',    
+  }, function(error, response) {
+      if (!error && response.statusCode === 200) {                
+        res.render('unitn', { user: req.user, aule: JSON.parse(response.body) });          
+      }
+  })  
 });
 
 router.get('/select-calendar', function (req, res, next) { 
