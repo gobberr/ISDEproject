@@ -21,6 +21,7 @@ function deleteMergedDay(userId) {
 function finalizeDay(userId, mergedDay) {      
   let currentDate = time.getCurrentDate();  
   // create a new object and save it
+  
   new Day({
     googleId: userId,
     date: currentDate,  

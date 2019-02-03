@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const request = require('request');
 const calendar = require('../public/javascripts/calendar-service');
-const maintenance = require('../public/javascripts/maintenance-service');
 const Events = require('../models/event-model');
 
 
@@ -30,11 +29,22 @@ router.get('/select-calendar', function (req, res, next) {
       calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2), req.user.googleId)    
       res.render('select-calendar', { user: req.user, info: 'You have choose the calendar \'' + req.query.id + '\'', button: true })      
     
-    } else {
+    } else {      
       // before select calendar, remove all events in database in order to clean the envoirment      
-      Events.deleteMany({ googleId: req.user.googleId }, function(err, events) {            
-        res.render('select-calendar', { user: req.user })  
-      });
+      console.log('debug: request to database-service')
+      request({
+        uri: 'http://localhost:3002/delete-events',
+        method: 'DELETE',
+        json: {
+          googleId: req.user.googleId
+        }
+      }, function(error, response) {
+          if (!error && response.statusCode === 200) {                
+            res.render('select-calendar', { user: req.user })  
+          } else {
+            console.log(error)
+          }
+      }) 
     }
   } else {
     res.render('select-calendar', { user: req.user })  
@@ -43,10 +53,19 @@ router.get('/select-calendar', function (req, res, next) {
 
 router.get('/calendar', function(req, res, next) {
   // retrieve all events in database
-    Events.find( { googleId: req.user.googleId } , function(err, events) {      
-      if(err) console.log('Error retrieving data from mongo')
-      res.render('calendar', { user: req.user, events: events });  
-    });  
+  request({
+    uri: 'http://localhost:3002/get-events',
+    method: 'GET',
+    json: {
+      googleId: req.user.googleId
+    }
+  }, function(error, response) {    
+    if (!error && response.statusCode === 200) {                     
+      res.render('calendar', { user: req.user, events: response.body });
+    } else {
+      console.log(error)
+    }
+  }) 
 });
 
 module.exports = router;

@@ -29,6 +29,7 @@ function authorize(callback, calendarId, googleIdReq) {
       keys.google_calendar.clientID, keys.google_calendar.clientSecret, 'urn:ietf:wg:oauth:2.0:oob');
   
   // find token record stored previously in mongo
+  //TODO: get token
   Token.findOne({
     googleId: googleIdReq
   }).then((currentToken) => { 
@@ -77,6 +78,7 @@ function saveEvents(auth, idCalendar, googleIdReq) {
           // if the event is today, put it in the eventToday array
           if(current_date_format === event.start.dateTime.substring(0, 10)) {              
             
+            // TODO: get single events
             Events.findOne({
               googleId: googleIdReq,
               title: event.summary,
@@ -88,6 +90,8 @@ function saveEvents(auth, idCalendar, googleIdReq) {
                   // console.log('Evento già presente: ' + currentEvents);                  
               } else {
                 // create a new record for token and save it
+
+                // TODO: create new events
                 new Events({
                   googleId: googleIdReq,
                   title: event.summary,

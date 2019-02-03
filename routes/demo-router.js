@@ -17,6 +17,7 @@ router.get('/', function(req, res, next) {
 });
 
 // clean the db
+// TODO: replace with APIs delete-day
 router.get('/clean', function(req, res, next) {     
   db.deleteMergedDay(req.user.googleId);
   res.render('run-demo', { user: req.user, merge: true, procedure: true });
@@ -32,7 +33,8 @@ router.get('/set', function(req, res, next) {
   }, function(error, response) {
 
     // then set events retrieved from db and merge
-    if (!error && response.statusCode === 200) {                
+    if (!error && response.statusCode === 200) {  
+      // TODO: replace with APIs get-events
       Events.find({ googleId: req.user.googleId }, function(err, events) {
         if(err) console.log('no events stored in db')
         time.mergeEvents(JSON.parse(response.body), events, req.user.googleId) 
@@ -45,6 +47,7 @@ router.get('/set', function(req, res, next) {
 });
 
 // query here from db
+// TODO: replace with APIs get-day passing also date
 router.get('/result', function(req, res, next) {     
   let currentDate = time.getCurrentDate();
   Day.find({ googleId: req.user.googleId, date: currentDate }, function(err, events) {
