@@ -25,6 +25,8 @@ router.get('/select-calendar', function (req, res, next) {
     // if the calendar is already selected    
     if(JSON.stringify(req.query.id)) { 
       // initialize calendar saving all events found
+      console.log(req.query.id)
+      
       calendar.init(JSON.stringify(req.query.id).substr(1, JSON.stringify(req.query.id).length -2), req.user.googleId)    
       res.render('select-calendar', { user: req.user, info: 'You have choose the calendar \'' + req.query.id + '\'', button: true })      
     
@@ -45,12 +47,6 @@ router.get('/calendar', function(req, res, next) {
       if(err) console.log('Error retrieving data from mongo')
       res.render('calendar', { user: req.user, events: events });  
     });  
-});
-
-//create a new token for new user
-router.get('/maintenance', function(req, res, next) {    
-  let newToken = maintenance.getAccessToken();
-  res.render('maintenance', { user: req.user, token: newToken });
 });
 
 module.exports = router;

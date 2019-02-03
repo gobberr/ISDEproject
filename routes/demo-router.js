@@ -14,44 +14,43 @@ router.get('/', function(req, res, next) {
     } else {
       res.render('run-demo', { user: req.user })  
     }
-  });
-  
-  // clean the db
-  router.get('/clean', function(req, res, next) {     
-    db.deleteMergedDay(req.user.googleId);
-    res.render('run-demo', { user: req.user, merge: true, procedure: true });
-  });
-  
-  // write merged day in db
-  router.get('/set', function(req, res, next) {       
-    
-    // get free room from unitn-service 
-    request({
-      uri: 'https://unitn-service.herokuapp.com/demo',    
-      method: 'GET',    
-    }, function(error, response) {
+});
 
-      // then set events retrieved from db and merge
-      if (!error && response.statusCode === 200) {                
-        Events.find({ googleId: req.user.googleId }, function(err, events) {
-          if(err) console.log('no events stored in db')
-          time.mergeEvents(JSON.parse(response.body), events, req.user.googleId) 
+// clean the db
+router.get('/clean', function(req, res, next) {     
+  db.deleteMergedDay(req.user.googleId);
+  res.render('run-demo', { user: req.user, merge: true, procedure: true });
+});
 
-          //render the result to frontend
-          res.render('run-demo', { user: req.user, get: true, procedure: true });
-        });
-      }
-    });     
-  });
+// write merged day in db
+router.get('/set', function(req, res, next) {       
   
-  // query here from db
-  router.get('/result', function(req, res, next) {     
-    let currentDate = time.getCurrentDate();
-    Day.find({ googleId: req.user.googleId, date: currentDate }, function(err, events) {
-      if(err) console.error(err)
-      res.render('run-demo', { user: req.user, result: true, planning: events });
-    })
-  });
+  // get free room from unitn-service 
+  request({
+    uri: 'https://unitn-service.herokuapp.com/demo',    
+    method: 'GET',    
+  }, function(error, response) {
 
+    // then set events retrieved from db and merge
+    if (!error && response.statusCode === 200) {                
+      Events.find({ googleId: req.user.googleId }, function(err, events) {
+        if(err) console.log('no events stored in db')
+        time.mergeEvents(JSON.parse(response.body), events, req.user.googleId) 
+
+        //render the result to frontend
+        res.render('run-demo', { user: req.user, get: true, procedure: true });
+      });
+    }
+  });     
+});
+
+// query here from db
+router.get('/result', function(req, res, next) {     
+  let currentDate = time.getCurrentDate();
+  Day.find({ googleId: req.user.googleId, date: currentDate }, function(err, events) {
+    if(err) console.error(err)
+    res.render('run-demo', { user: req.user, result: true, planning: events });
+  })
+});
 
 module.exports = router;
