@@ -1,5 +1,4 @@
 const {google} = require('googleapis');
-const time = require('./time-service');
 const keys = require('../../config/keys');
 const request = require('request');
 
@@ -8,11 +7,9 @@ const request = require('request');
  * @param {*} idCalendar Name of the calendar in google calendar
  * @param {*} googleIdReq Google id of the account to get access to his calendar
  */
-function init(idCalendar, googleIdReq) {
-  
+function init(idCalendar, googleIdReq) {  
   // Authorize a client with credentials then call saveEvents() to store events in mongodb
-  authorize(saveEvents, idCalendar, googleIdReq);
-  return 0;
+  authorize(saveEvents, idCalendar, googleIdReq);  
 }
 
 /**
@@ -26,7 +23,7 @@ function authorize(callback, calendarId, googleIdReq) {
   
   const oAuth2Client = new google.auth.OAuth2(
       keys.google_calendar.clientID, keys.google_calendar.clientSecret, 'urn:ietf:wg:oauth:2.0:oob');
-  
+
   // find token record stored previously in mongo
   request({
     uri: 'http://localhost:3002/get-token',
@@ -48,11 +45,9 @@ function authorize(callback, calendarId, googleIdReq) {
       token.expiry_date = Number(currentToken.expiry_date);
       oAuth2Client.setCredentials(token);    
       
-      callback(oAuth2Client, calendarId, googleIdReq);
-      
+      callback(oAuth2Client, calendarId, googleIdReq);      
     } 
   })
-  
 }
 
 /**
@@ -73,7 +68,7 @@ function saveEvents(auth, idCalendar, googleIdReq) {
     const events = res.data.items;    
     // if there are no elements in the calendar
     if (events.length==0) return console.log('No events in calendar: ' + idCalendar);            
-    let current_date_format = time.getCurrentDate()            
+    let current_date_format = getCurrentDate()            
     // scan all events finded in the calendar
     events.forEach(event => {      
       // if the event is today, put it in the eventToday array
@@ -94,6 +89,20 @@ function saveEvents(auth, idCalendar, googleIdReq) {
       }
     });                
   });    
+}
+
+/**
+ * Return the current date 
+ */
+function getCurrentDate() {  
+  let current_date = new Date();      
+  let d = new Date(current_date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+  return [year, month, day].join('-');
 }
 
 exports.init = init;

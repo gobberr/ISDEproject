@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const request = require('request');
-const time = require('../public/javascripts/time-service');
 
 router.get('/', function(req, res, next) {    
     // if is logged
@@ -59,7 +58,7 @@ router.get('/set', function(req, res, next) {
               events: events.body
             }
           }, function(error, result) {
-            if(error) console.log('error in /demo/set')
+            if(error || result.statusCode != 200) console.log('error in /demo/set')
             res.render('run-demo', { user: req.user, get: true, procedure: true });
           })
         } else {
