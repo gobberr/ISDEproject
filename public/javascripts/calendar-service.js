@@ -1,6 +1,7 @@
 const {google} = require('googleapis');
 const keys = require('../../config/keys');
 const request = require('request');
+const Token = require('../../models/token-model')
 
 /**
  * Initialize the calendar flow, setting callback and other stuff used for access to calendar
@@ -9,7 +10,8 @@ const request = require('request');
  */
 function init(idCalendar, googleIdReq) {  
   // Authorize a client with credentials then call saveEvents() to store events in mongodb
-  authorize(saveEvents, idCalendar, googleIdReq);  
+  authorize(saveEvents, idCalendar, googleIdReq);
+  return 0;  
 }
 
 /**
@@ -20,34 +22,22 @@ function init(idCalendar, googleIdReq) {
  * @param {String} googleIdReq Google id of the account to get access to his calendar
  */
 function authorize(callback, calendarId, googleIdReq) {
-  
   const oAuth2Client = new google.auth.OAuth2(
       keys.google_calendar.clientID, keys.google_calendar.clientSecret, 'urn:ietf:wg:oauth:2.0:oob');
-
   // find token record stored previously in mongo
-  request({
-    uri: 'http://localhost:3002/get-token',
-    method: 'GET',
-    json: {
-      googleId: googleIdReq
-    }
-  }, function(error, response) {
-    if (!error && response.statusCode === 200) {    
-      
-      // cast the object stored in mongodb to the format accepted by setCredentials function
-      let token = new Object();
-      let currentToken = new Object()
-      currentToken = response.body;      
-      token.access_token = currentToken.access_token;
-      token.refresh_token = currentToken.refresh_token;
-      token.scope = currentToken.scope;
-      token.token_type = currentToken.token_type;
-      token.expiry_date = Number(currentToken.expiry_date);
-      oAuth2Client.setCredentials(token);    
-      
-      callback(oAuth2Client, calendarId, googleIdReq);      
-    } 
-  })
+  Token.findOne({
+    googleId: googleIdReq
+  }).then((currentToken) => { 
+    // cast the object stored in mongodb to the format accepted by setCredentials function
+    let token = new Object();
+    token.access_token = currentToken.access_token;
+    token.refresh_token = currentToken.refresh_token;
+    token.scope = currentToken.scope;
+    token.token_type = currentToken.token_type;
+    token.expiry_date = Number(currentToken.expiry_date);
+    oAuth2Client.setCredentials(token);            
+    callback(oAuth2Client, calendarId, googleIdReq);    
+  });
 }
 
 /**
@@ -74,7 +64,7 @@ function saveEvents(auth, idCalendar, googleIdReq) {
       // if the event is today, put it in the eventToday array
       if(current_date_format === event.start.dateTime.substring(0, 10)) {              
         request({
-          uri: 'http://localhost:3002/put-event',
+          uri: 'https://database-service-isde.herokuapp.com/put-event',
           method: 'PUT',
           json: {
             event: {

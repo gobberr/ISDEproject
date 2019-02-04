@@ -6,8 +6,8 @@ const calendar = require('../public/javascripts/calendar-service');
 // get all free room of povo
 router.get('/unitn', function(req, res, next) {    
   request({
-    uri: 'https://unitn-service.herokuapp.com',    
-    method: 'GET',    
+    uri: 'https://unitn-service.herokuapp.com/room',    
+    method: 'GET',
   }, function(error, response) {
     if (!error && response.statusCode === 200) {                
       res.render('unitn', { user: req.user, aule: JSON.parse(response.body) });          
@@ -26,7 +26,7 @@ router.get('/select-calendar', function (req, res, next) {
     } else {      
       // before select calendar, remove all events in database in order to clean the envoirment            
       request({
-        uri: 'http://localhost:3002/delete-events',
+        uri: 'https://database-service-isde.herokuapp.com/delete-events',
         method: 'DELETE',
         json: {
           googleId: req.user.googleId
@@ -44,10 +44,10 @@ router.get('/select-calendar', function (req, res, next) {
   }
 });
 
+// retrieve all events in database for the logged user
 router.get('/calendar', function(req, res, next) {
-  // retrieve all events in database
   request({
-    uri: 'http://localhost:3002/get-events',
+    uri: 'https://database-service-isde.herokuapp.com/get-events-list',
     method: 'GET',
     json: {
       googleId: req.user.googleId

@@ -8,8 +8,7 @@ passport.serializeUser((user,done) => {
   done(null,user.id);
 });
 
-passport.deserializeUser((id,done) => {
-  // TODO: get user by ID
+passport.deserializeUser((id,done) => {  
   User.findById(id).then((user) => {
     done(null,user);
   })
@@ -22,8 +21,7 @@ passport.use(
     clientID: keys.google.clientID,
     clientSecret: keys.google.clientSecret
   }, (accessToken,refreshToken,profile,done) => {    
-    //check if user exists in database 
-    //TODO: get user by id   
+    //check if user exists in database     
     User.findOne({
       googleId: profile.id
     }).then((currentUser) => {
@@ -31,8 +29,7 @@ passport.use(
         //already have user        
         done(null, currentUser);
       } else {
-        //create new user and save it
-        // TODO: put user 
+        //create new user and save it        
         new User({
           username: profile.displayName,
           provider: 'google',                    
@@ -44,15 +41,13 @@ passport.use(
       }
     });
     // check if token exists in database
-    // TODO: get token by id
     Token.findOne({
       googleId: profile.id
     }).then((currentToken) => {
       if(currentToken) {                        
         done(null, currentToken);
       } else {
-        // create a new record for token and save it
-        // TODO: put token
+        // create a new record for token and save it        
         new Token({
           googleId: profile.id,
           access_token: accessToken,
