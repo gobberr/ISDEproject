@@ -1,8 +1,7 @@
 const {google} = require('googleapis');
 const time = require('./time-service');
 const keys = require('../../config/keys');
-const Token = require('../../models/token-model');
-const Events = require('../../models/event-model');
+const request = require('request');
 
 /**
  * Initialize the calendar flow, setting callback and other stuff used for access to calendar
@@ -29,25 +28,31 @@ function authorize(callback, calendarId, googleIdReq) {
       keys.google_calendar.clientID, keys.google_calendar.clientSecret, 'urn:ietf:wg:oauth:2.0:oob');
   
   // find token record stored previously in mongo
-  //TODO: get token
-  Token.findOne({
-    googleId: googleIdReq
-  }).then((currentToken) => { 
-
-    // cast the object stored in mongodb to the format accepted by setCredentials function
-    let token = new Object();
-    token.access_token = currentToken.access_token;
-    token.refresh_token = currentToken.refresh_token;
-    token.scope = currentToken.scope;
-    token.token_type = currentToken.token_type;
-    token.expiry_date = Number(currentToken.expiry_date);
-    oAuth2Client.setCredentials(token);    
-        
-    callback(oAuth2Client, calendarId, googleIdReq);
-    
-  }).catch((err) => {
-    console.log(err)
-  });
+  request({
+    uri: 'http://localhost:3002/get-token',
+    method: 'GET',
+    json: {
+      googleId: googleIdReq
+    }
+  }, function(error, response) {
+    if (!error && response.statusCode === 200) {    
+      
+      // cast the object stored in mongodb to the format accepted by setCredentials function
+      let token = new Object();
+      let currentToken = new Object()
+      currentToken = response.body;      
+      token.access_token = currentToken.access_token;
+      token.refresh_token = currentToken.refresh_token;
+      token.scope = currentToken.scope;
+      token.token_type = currentToken.token_type;
+      token.expiry_date = Number(currentToken.expiry_date);
+      oAuth2Client.setCredentials(token);    
+      
+      callback(oAuth2Client, calendarId, googleIdReq);
+      
+    } 
+  })
+  
 }
 
 /**
@@ -63,50 +68,31 @@ function saveEvents(auth, idCalendar, googleIdReq) {
     singleEvents: true,
     orderBy: 'startTime',
   }, (err, res) => {
-    if (err) {
-      return console.error('Error loading calendar: ' + idCalendar + '. Error: ' + err);
-    }
-    else {
-      const events = res.data.items;
     
-      // if there are some elements in the calendar
-      if (events.length) {       
-        let current_date_format = time.getCurrentDate()        
-        // scan all events finded in the calendar
-        events.forEach(event => {
-          
-          // if the event is today, put it in the eventToday array
-          if(current_date_format === event.start.dateTime.substring(0, 10)) {              
-            
-            // TODO: get single events
-            Events.findOne({
+    if (err) return console.log('Error loading calendar: ' + idCalendar + '. Error: ' + err);    
+    const events = res.data.items;    
+    // if there are no elements in the calendar
+    if (events.length==0) return console.log('No events in calendar: ' + idCalendar);            
+    let current_date_format = time.getCurrentDate()            
+    // scan all events finded in the calendar
+    events.forEach(event => {      
+      // if the event is today, put it in the eventToday array
+      if(current_date_format === event.start.dateTime.substring(0, 10)) {              
+        request({
+          uri: 'http://localhost:3002/put-event',
+          method: 'PUT',
+          json: {
+            event: {
               googleId: googleIdReq,
               title: event.summary,
               date: event.start.dateTime.substring(0, 10),
               start_time: event.start.dateTime.substring(11, 16),
               end_time: event.end.dateTime.substring(11, 16)
-            }).then((currentEvents) => {
-              if(currentEvents) {                
-                  // console.log('Evento già presente: ' + currentEvents);                  
-              } else {
-                // create a new record for token and save it
-
-                // TODO: create new events
-                new Events({
-                  googleId: googleIdReq,
-                  title: event.summary,
-                  date: event.start.dateTime.substring(0, 10),
-                  start_time: event.start.dateTime.substring(11, 16),
-                  end_time: event.end.dateTime.substring(11, 16)
-                }).save(); 
-              }
-            })   
+            }
           }
-        });        
-      } else {
-        // console.error('There are no events in the calendar: ' + idCalendar);
+        })            
       }
-    }
+    });                
   });    
 }
 

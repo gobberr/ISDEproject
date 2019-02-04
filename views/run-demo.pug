@@ -19,7 +19,7 @@ block content
               .row              
               #clean
                 if clean
-                  form(method='get' action='/demo/clean')
+                  form(method='delete' action='/demo/clean')
                     .form-group
                       h5 Step 1: Clean the envoirment using this button
                       .row                    
@@ -28,7 +28,7 @@ block content
                   br                            
               #merge
                 if merge
-                  form(method='get' action='/demo/set')
+                  form(method='put' action='/demo/set')
                     .form-group
                       h5 Step 2: Merge the events with the freerooms
                       .row                    

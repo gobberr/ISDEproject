@@ -30,8 +30,7 @@ router.get('/select-calendar', function (req, res, next) {
       res.render('select-calendar', { user: req.user, info: 'You have choose the calendar \'' + req.query.id + '\'', button: true })      
     
     } else {      
-      // before select calendar, remove all events in database in order to clean the envoirment      
-      console.log('debug: request to database-service')
+      // before select calendar, remove all events in database in order to clean the envoirment            
       request({
         uri: 'http://localhost:3002/delete-events',
         method: 'DELETE',
