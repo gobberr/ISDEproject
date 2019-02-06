@@ -54,7 +54,7 @@ function saveEvents(auth, idCalendar, googleIdReq) {
     orderBy: 'startTime',
   }, (err, res) => {
     
-    if (err) return console.log('Error loading calendar: ' + idCalendar + '. Error: ' + err);    
+    if (err) return console.log('Error loading calendar: ' + idCalendar + '. ' + err);    
     const events = res.data.items;    
     // if there are no elements in the calendar
     if (events.length==0) return console.log('No events in calendar: ' + idCalendar);            

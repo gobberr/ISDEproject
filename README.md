@@ -2,18 +2,15 @@
 
 This web service offers one-day planning. Using the Google Calendar and EasyRoom APIs, it returns the merge of the events with the free classrooms in which to spend the free time. Check it out! 
 
-## https://isde-project.herokuapp.com
+### [Deployment url](https://isde-project.herokuapp.com)
 
-APIs:
+Services:
 
-1.  Google +
+1.  Google+ and Google Calendar adapter, integrated in this project
 
-2.  Google Calendar
+2.  Easyroom service adapter, integrated [in this project](https://github.com/gobberr/easyroom-service/)
 
-3.  EasyRoom
-
-4.  Mongodb
-
+3.  Database service adapter, integrated [in this project](https://github.com/gobberr/database-service/)
 
 ## Scenario: 
 
