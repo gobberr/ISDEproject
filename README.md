@@ -1,10 +1,20 @@
 # ISDEproject
 
+## Description
+
 This web service offers one-day planning. Using the Google Calendar and EasyRoom APIs, it returns the merge of the events with the free classrooms in which to spend the free time. Check it out! 
 
-### [Deployment url](https://isde-project.herokuapp.com)
+## Scenario
 
-Services:
+1.	Users must sign in with google accounts using Google+ APIs
+
+2.  Select a Google Calendar to get your events	
+
+3. 	Merge of events in the calendar with free classrooms of University of Trento
+
+4.  See your planned day
+
+## Services
 
 1.  Google+ and Google Calendar adapter, integrated in this project
 
@@ -12,16 +22,9 @@ Services:
 
 3.  Database service adapter, integrated [in this project](https://github.com/gobberr/database-service/)
 
-## Scenario: 
+## Heroku deployment [at this link](https://isde-project.herokuapp.com)
 
-1.	Sign in with google accounts using Google+ APIs
-
-2.  Selecting a google calendar to get your events	
-
-3. 	Merge of events in the calendar with free classrooms of University of Trento
-
-
-## Setup:
+## Local setup
 
 1. Install the dependencies: `npm install`
 
